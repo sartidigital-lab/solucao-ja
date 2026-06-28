@@ -177,6 +177,10 @@ DECLARE
     v_role text;
     v_full_name text;
     v_phone text;
+    v_city text;
+    v_bairro text;
+    v_bio text;
+    v_cpf_cnpj text;
 BEGIN
     -- Extract role, full_name and phone from metadata with fallbacks
     v_role := coalesce(new.raw_user_meta_data->>'role', 'client');
@@ -186,21 +190,27 @@ BEGIN
         split_part(new.email, '@', 1)
     );
     v_phone := new.raw_user_meta_data->>'phone';
+    v_city := new.raw_user_meta_data->>'city';
+    v_bairro := new.raw_user_meta_data->>'bairro';
+    v_bio := new.raw_user_meta_data->>'bio';
+    v_cpf_cnpj := new.raw_user_meta_data->>'cpf_cnpj';
 
     -- Insert into public.profiles
-    INSERT INTO public.profiles (id, role, full_name, phone, avatar_url)
+    INSERT INTO public.profiles (id, role, full_name, phone, avatar_url, city, bairro)
     VALUES (
         new.id,
         v_role,
         v_full_name,
         v_phone,
-        new.raw_user_meta_data->>'avatar_url'
+        new.raw_user_meta_data->>'avatar_url',
+        v_city,
+        v_bairro
     );
 
     -- If professional, also create matching record in public.professionals
     IF v_role = 'professional' THEN
-        INSERT INTO public.professionals (id, attendance_type)
-        VALUES (new.id, 'home'); -- default type
+        INSERT INTO public.professionals (id, bio, cpf_cnpj, attendance_type)
+        VALUES (new.id, v_bio, v_cpf_cnpj, 'home'); -- default type
     END IF;
 
     RETURN NEW;
