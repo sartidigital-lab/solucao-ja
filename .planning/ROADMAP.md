@@ -6,7 +6,7 @@ O Solução Já será desenvolvido em 7 fases sequenciais focadas em construir u
 
 ## Phases
 
-- [ ] **Phase 1: Banco de Dados & Autenticação** - Setup do monorepo, schemas no Supabase e fluxos de cadastro/login com controle de acesso.
+- [x] **Phase 1: Banco de Dados & Autenticação** - Setup do monorepo, schemas no Supabase e fluxos de cadastro/login com controle de acesso.
 - [ ] **Phase 2: Perfil Profissional & Serviços** - Cadastro de perfis, gerenciamento de serviços e fotos do portfólio.
 - [ ] **Phase 3: Busca, Geolocalização & "Preciso Agora"** - Busca inteligente por geolocalização e botão de atendimento imediato.
 - [ ] **Phase 4: Agenda & Agendamentos** - Configuração da agenda semanal e fluxo básico de solicitação de serviços.
@@ -23,13 +23,13 @@ O Solução Já será desenvolvido em 7 fases sequenciais focadas em construir u
 **Success Criteria** (what must be TRUE):
   1. Cliente e profissional conseguem se cadastrar e efetuar login com validação de dados.
   2. Rotas privadas são protegidas usando Next.js Middleware de acordo com o papel (role) do usuário.
-  3. Estrutura de banco de dados e RLS ativados no Supabase.
+  3. Estrutura de banco de dados and RLS ativados no Supabase.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Setup do projeto monorepo, Next.js 16 e Tailwind CSS 4.
-- [ ] 01-02: Criação de schemas de banco de dados e triggers de perfil no Supabase.
-- [ ] 01-03: Implementação de Supabase Auth, middleware de rotas e telas de Login/Cadastro.
+- [x] 01-01: Setup do projeto monorepo, Next.js 16 e Tailwind CSS 4.
+- [x] 01-02: Criação de schemas de banco de dados e triggers de perfil no Supabase.
+- [x] 01-03: Implementação de Supabase Auth, middleware de rotas e telas de Login/Cadastro.
 
 ### Phase 2: Perfil Profissional & Serviços
 **Goal**: Implementar a criação de perfil público de profissionais, catálogo de serviços e fotos do portfólio.
@@ -123,7 +123,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Banco de Dados & Autenticação | 0/3 | Not started | - |
+| 1. Banco de Dados & Autenticação | 3/3 | Complete | 2026-06-28 |
 | 2. Perfil Profissional & Serviços | 0/3 | Not started | - |
 | 3. Busca, Geolocalização & "Preciso Agora" | 0/3 | Not started | - |
 | 4. Agenda & Agendamentos | 0/3 | Not started | - |
