@@ -90,45 +90,45 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Pending |
-| AUTH-02 | Pending |
-| AUTH-03 | Pending |
-| AUTH-04 | Pending |
-| AUTH-05 | Pending |
-| PROF-01 | Pending |
-| PROF-02 | Pending |
-| PROF-03 | Pending |
-| PROF-04 | Pending |
-| PROF-05 | Pending |
-| PROF-06 | Pending |
-| PROF-07 | Pending |
-| SCH-01  | Pending |
-| SCH-02  | Pending |
-| SCH-03  | Pending |
-| SCH-04  | Pending |
-| SCH-05  | Pending |
-| BOOK-01 | Pending |
-| BOOK-02 | Pending |
-| BOOK-03 | Pending |
-| BOOK-04 | Pending |
-| BOOK-05 | Pending |
-| REV-01  | Pending |
-| REV-02  | Pending |
-| REV-03  | Pending |
-| REV-04  | Pending |
-| COMM-01 | Pending |
-| COMM-02 | Pending |
-| ADM-01  | Pending |
-| ADM-02  | Pending |
-| ADM-03  | Pending |
-| ADM-04  | Pending |
-| ADM-05  | Pending |
-| MON-01  | Pending |
+| AUTH-01 | Phase 1 | Pending |
+| AUTH-02 | Phase 1 | Pending |
+| AUTH-03 | Phase 1 | Pending |
+| AUTH-04 | Phase 1 | Pending |
+| AUTH-05 | Phase 1 | Pending |
+| PROF-01 | Phase 2 | Pending |
+| PROF-02 | Phase 2 | Pending |
+| PROF-03 | Phase 2 | Pending |
+| PROF-04 | Phase 2 | Pending |
+| PROF-05 | Phase 2 | Pending |
+| PROF-06 | Phase 4 | Pending |
+| PROF-07 | Phase 3 | Pending |
+| SCH-01  | Phase 3 | Pending |
+| SCH-02  | Phase 3 | Pending |
+| SCH-03  | Phase 3 | Pending |
+| SCH-04  | Phase 3 | Pending |
+| SCH-05  | Phase 3 | Pending |
+| BOOK-01 | Phase 4 | Pending |
+| BOOK-02 | Phase 4 | Pending |
+| BOOK-03 | Phase 4 | Pending |
+| BOOK-04 | Phase 4 | Pending |
+| BOOK-05 | Phase 5 | Pending |
+| REV-01  | Phase 6 | Pending |
+| REV-02  | Phase 6 | Pending |
+| REV-03  | Phase 6 | Pending |
+| REV-04  | Phase 6 | Pending |
+| COMM-01 | Phase 4 | Pending |
+| COMM-02 | Phase 6 | Pending |
+| ADM-01  | Phase 6 | Pending |
+| ADM-02  | Phase 6 | Pending |
+| ADM-03  | Phase 6 | Pending |
+| ADM-04  | Phase 6 | Pending |
+| ADM-05  | Phase 6 | Pending |
+| MON-01  | Phase 7 | Pending |
 
 **Coverage:**
 - v1 requirements: 34 total
-- Mapped to phases: 0
-- Unmapped: 34 ⚠️
+- Mapped to phases: 34
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-06-28*
