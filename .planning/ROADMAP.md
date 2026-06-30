@@ -7,7 +7,7 @@ O Solução Já será desenvolvido em 7 fases sequenciais focadas em construir u
 ## Phases
 
 - [x] **Phase 1: Banco de Dados & Autenticação** - Setup do monorepo, schemas no Supabase e fluxos de cadastro/login com controle de acesso.
-- [ ] **Phase 2: Perfil Profissional & Serviços** - Cadastro de perfis, gerenciamento de serviços e fotos do portfólio.
+- [x] **Phase 2: Perfil Profissional & Serviços** - Cadastro de perfis, gerenciamento de serviços e fotos do portfólio.
 - [ ] **Phase 3: Busca, Geolocalização & "Preciso Agora"** - Busca inteligente por geolocalização e botão de atendimento imediato.
 - [ ] **Phase 4: Agenda & Agendamentos** - Configuração da agenda semanal e fluxo básico de solicitação de serviços.
 - [ ] **Phase 5: Integração de Pagamento (Mercado Pago/Pix)** - Cobrança automática de sinal de reserva via Mercado Pago com confirmação instantânea.
@@ -42,9 +42,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Telas de edição de perfil de cliente e profissional.
-- [ ] 02-02: Gerenciamento do catálogo de serviços (CRUD) no painel do profissional.
-- [ ] 02-03: Portfólio de imagens com upload para Supabase Storage e otimização Sharp.
+- [x] 02-01: Telas de edição de perfil de cliente e profissional.
+- [x] 02-02: Gerenciamento do catálogo de serviços (CRUD) no painel do profissional.
+- [x] 02-03: Portfólio de imagens com upload para Supabase Storage e otimização Sharp.
 
 ### Phase 3: Busca, Geolocalização & "Preciso Agora"
 **Goal**: Criar o sistema de busca inteligente por geolocalização e o botão de atendimento imediato.
@@ -124,7 +124,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Banco de Dados & Autenticação | 3/3 | Complete | 2026-06-28 |
-| 2. Perfil Profissional & Serviços | 0/3 | Not started | - |
+| 2. Perfil Profissional & Serviços | 3/3 | Complete | 2026-06-30 |
 | 3. Busca, Geolocalização & "Preciso Agora" | 0/3 | Not started | - |
 | 4. Agenda & Agendamentos | 0/3 | Not started | - |
 | 5. Integração de Pagamento | 0/2 | Not started | - |
