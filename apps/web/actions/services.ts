@@ -18,7 +18,7 @@ export async function createService(formData: unknown) {
     return { error: 'Não autorizado' };
   }
 
-  const { error } = await supabase.from('services').insert({
+  const { error } = await (supabase.from('services') as any).insert({
     professional_id: user.id,
     category_id: categoryId,
     name,
@@ -49,8 +49,7 @@ export async function updateService(id: string, formData: unknown) {
     return { error: 'Não autorizado' };
   }
 
-  const { error } = await supabase
-    .from('services')
+  const { error } = await (supabase.from('services') as any)
     .update({
       category_id: categoryId,
       name,
@@ -78,8 +77,7 @@ export async function deleteService(id: string) {
     return { error: 'Não autorizado' };
   }
 
-  const { error } = await supabase
-    .from('services')
+  const { error } = await (supabase.from('services') as any)
     .delete()
     .eq('id', id)
     .eq('professional_id', user.id);
