@@ -25,7 +25,7 @@ export async function addPortfolioImage(url: string, title?: string | null) {
     return { error: 'Limite de 10 fotos no portfólio atingido' };
   }
 
-  const { error } = await supabase.from('portfolio_images').insert({
+  const { error } = await (supabase.from('portfolio_images') as any).insert({
     professional_id: user.id,
     image_url: url,
     title: title || null,

@@ -18,8 +18,7 @@ export async function updateClientProfile(formData: unknown) {
     return { error: 'Não autorizado' };
   }
 
-  const { error } = await supabase
-    .from('profiles')
+  const { error } = await (supabase.from('profiles') as any)
     .update({
       full_name: fullName,
       phone,
@@ -52,8 +51,7 @@ export async function updateProfessionalProfile(formData: unknown) {
   }
 
   // 1. Update public.profiles
-  const { error: profileError } = await supabase
-    .from('profiles')
+  const { error: profileError } = await (supabase.from('profiles') as any)
     .update({
       full_name: fullName,
       phone,
@@ -68,8 +66,7 @@ export async function updateProfessionalProfile(formData: unknown) {
   }
 
   // 2. Update public.professionals
-  const { error: professionalError } = await supabase
-    .from('professionals')
+  const { error: professionalError } = await (supabase.from('professionals') as any)
     .update({
       bio,
       cpf_cnpj: cpfCnpj,
