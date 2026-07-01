@@ -16,7 +16,7 @@ importers:
     dependencies:
       lucide-react:
         specifier: latest
-        version: 1.22.0(react@19.2.7)
+        version: 1.23.0(react@19.2.7)
       next:
         specifier: ^16.2.9
         version: 16.2.9(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -32,7 +32,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: latest
-        version: 26.0.1
+        version: 26.1.0
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.17
@@ -59,7 +59,10 @@ importers:
         version: link:../../packages/database
       lucide-react:
         specifier: latest
-        version: 1.22.0(react@19.2.7)
+        version: 1.23.0(react@19.2.7)
+      mercadopago:
+        specifier: ^3.2.0
+        version: 3.2.0
       next:
         specifier: ^16.2.9
         version: 16.2.9(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -78,7 +81,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: latest
-        version: 26.0.1
+        version: 26.1.0
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.17
@@ -366,8 +369,8 @@ packages:
     cpu: [arm64]
     os: [win32]
 
-  '@types/node@26.0.1':
-    resolution: {integrity: sha512-fc3KiUoBt6kie0N9bIW3E47vZsuaMf0PM2AaUpLCLT0s/LvX1nxAim6Fc049cNxODPpGm6qRAuUOB86SkRuPQw==}
+  '@types/node@26.1.0':
+    resolution: {integrity: sha512-O0A1G3xPGy4w7AgQdAQYUlQ+BKk2Oovw8eRpofyp5KdBZULnbe+WqaOVNrm705SHphCiG4XHsACrSmPu1f+Kgw==}
 
   '@types/react-dom@19.2.3':
     resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
@@ -403,10 +406,14 @@ packages:
     resolution: {integrity: sha512-1dhVQZXhcHje7798IVM+xoo/1ZdVfzOMIc8/rgVSijRK38EDqOJoGula9N/8ZI5RD8QTxNQtK/Gozpr+qUqRRA==}
     engines: {node: '>=20.0.0'}
 
-  lucide-react@1.22.0:
-    resolution: {integrity: sha512-c9o3l0PiNcgOQDW4F31BEYHudE7kgxVt3o30qMl36ZPwTxXlGB4QnLilhERvVM4uh/pl5MDyY1/gzZSYcHDtBg==}
+  lucide-react@1.23.0:
+    resolution: {integrity: sha512-38BpJcD0JhFosxHApP/BYsBetLpQFRoTRzEzstM/XCc3jsAG7wqaY1lgVwxiUe3xqYE+lNxo2PkCmYwXWrwwIw==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  mercadopago@3.2.0:
+    resolution: {integrity: sha512-9keIOj21CpIvpLepeUp+VTUejiD7Dc2eCy2yqW21G4yBtj3Ey2E4AsnFrxRfGchtRc6L7qxA3YNkT4N7IcWj+g==}
+    engines: {node: '>=18'}
 
   nanoid@3.3.15:
     resolution: {integrity: sha512-y7Wygv/7mEOvxTuEQDB8StXdMRBWf1kR/tlhAzBRUFkB2jfcLOAxO/SHmOO2zgz1pVgK29/kyupn059/bCHdjA==}
@@ -689,7 +696,7 @@ snapshots:
   '@turbo/windows-arm64@2.10.0':
     optional: true
 
-  '@types/node@26.0.1':
+  '@types/node@26.1.0':
     dependencies:
       undici-types: 8.3.0
 
@@ -716,9 +723,11 @@ snapshots:
 
   iceberg-js@0.8.1: {}
 
-  lucide-react@1.22.0(react@19.2.7):
+  lucide-react@1.23.0(react@19.2.7):
     dependencies:
       react: 19.2.7
+
+  mercadopago@3.2.0: {}
 
   nanoid@3.3.15: {}
 
