@@ -36,7 +36,9 @@ export const professionalProfileSchema = clientProfileSchema.extend({
   cpfCnpj: z.string().min(11, 'CPF ou CNPJ inválido (mínimo 11 caracteres)'),
   attendanceType: z.enum(['home', 'salon', 'both']),
   serviceAreaRadiusKm: z.number().min(1, 'O raio mínimo é de 1 km').max(100, 'O raio máximo é de 100 km'),
-  isAvailableNow: z.boolean()
+  isAvailableNow: z.boolean(),
+  depositPolicy: z.enum(['no_deposit', 'fixed_amount', 'percentage']).default('no_deposit'),
+  depositFixedAmount: z.number().min(0, 'O valor não pode ser negativo').default(0)
 });
 
 export const serviceSchema = z.object({
