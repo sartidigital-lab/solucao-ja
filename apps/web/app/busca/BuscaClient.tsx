@@ -251,7 +251,9 @@ export default function BuscaClient({
                           <div className="flex items-center gap-2">
                             <h3 className="text-lg font-bold text-white leading-tight">{p.full_name}</h3>
                             {p.is_verified && (
-                              <Icons.CheckCircle2 className="h-5 w-5 text-blue-400 fill-blue-950" title="Verificado" />
+                              <span title="Verificado">
+                                <Icons.CheckCircle2 className="h-5 w-5 text-blue-400 fill-blue-950" />
+                              </span>
                             )}
                           </div>
                           

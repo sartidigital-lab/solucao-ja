@@ -265,7 +265,9 @@ export default function DiscoveryClient({ categories }: DiscoveryClientProps) {
                               {p.full_name}
                             </h3>
                             {p.is_verified && (
-                              <Icons.CheckCircle2 className="h-4 w-4 text-blue-400 fill-blue-950" title="Verificado" />
+                              <span title="Verificado">
+                                <Icons.CheckCircle2 className="h-4 w-4 text-blue-400 fill-blue-950" />
+                              </span>
                             )}
                           </div>
                           <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 mt-1 inline-block">
