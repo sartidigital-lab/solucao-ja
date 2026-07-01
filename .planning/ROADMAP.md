@@ -10,7 +10,7 @@ O Solução Já será desenvolvido em 7 fases sequenciais focadas em construir u
 - [x] **Phase 2: Perfil Profissional & Serviços** - Cadastro de perfis, gerenciamento de serviços e fotos do portfólio.
 - [x] **Phase 3: Busca, Geolocalização & "Preciso Agora"** - Busca inteligente por geolocalização e botão de atendimento imediato.
 - [x] **Phase 4: Agenda & Agendamentos** - Configuração da agenda semanal e fluxo básico de solicitação de serviços.
-- [ ] **Phase 5: Integração de Pagamento (Mercado Pago/Pix)** - Cobrança automática de sinal de reserva via Mercado Pago com confirmação instantânea.
+- [x] **Phase 5: Integração de Pagamento (Mercado Pago/Pix)** - Cobrança automática de sinal de reserva via Mercado Pago com confirmação instantânea.
 - [ ] **Phase 6: Avaliações, Notificações & Admin Panel** - Avaliação bilateral, notificações por WhatsApp Cloud API e painel admin de moderação.
 - [ ] **Phase 7: Planos & Destaques (Monetização)** - Planos de assinatura (Gratuito, Profissional, Destaque) com liberação de recursos.
 
@@ -88,8 +88,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: Configuração do SDK Mercado Pago e criação de preferências de pagamento de sinal.
-- [ ] 05-02: Implementação do webhook de pagamentos e transição automática de status de agendamento.
+- [x] 05-01: Configuração do SDK Mercado Pago e criação de preferências de pagamento de sinal.
+- [x] 05-02: Implementação do webhook de pagamentos e transição automática de status de agendamento.
 
 ### Phase 6: Avaliações, Notificações & Admin Panel
 **Goal**: Criar o sistema de avaliação mútua, notificações automatizadas no WhatsApp e o Painel Administrativo.
@@ -127,6 +127,6 @@ Plans:
 | 2. Perfil Profissional & Serviços | 3/3 | Complete | 2026-06-30 |
 | 3. Busca, Geolocalização & "Preciso Agora" | 3/3 | Complete | 2026-07-01 |
 | 4. Agenda & Agendamentos | 3/3 | Complete | 2026-07-01 |
-| 5. Integração de Pagamento | 0/2 | Not started | - |
+| 5. Integração de Pagamento | 2/2 | Complete | 2026-07-01 |
 | 6. Avaliações, Notificações & Admin | 0/3 | Not started | - |
 | 7. Planos & Destaques | 0/2 | Not started | - |
