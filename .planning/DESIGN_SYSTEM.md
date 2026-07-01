@@ -19,3 +19,7 @@ The design system for **Solução Já** is built with modern, high-end visual ae
 - **Card Roundness**: `12px` (ROUND_TWELVE)
 - **Interactive Controls (Buttons/Inputs)**: `12px`
 - **Pills / Status Tags**: `9999px` (ROUND_FULL)
+
+## 5. Visual Spec Sheet
+![Solução Já Design System Spec Sheet](C:/Users/User/.gemini/antigravity/brain/96397952-71a1-4ceb-b0ce-76d74a27ac82/design_system_spec_1782906266706.png)
+
