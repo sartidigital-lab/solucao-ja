@@ -37,6 +37,8 @@ export default async function ProfessionalDashboardPage() {
     .filter((b) => b.status === 'confirmed' || b.status === 'completed')
     .reduce((sum, b) => sum + (b.price || 0), 0);
 
+  const fullName = profile ? (profile as any).full_name : 'Prestador';
+
   return (
     <div className="min-h-screen bg-slate-950 text-white py-12 px-6">
       <div className="max-w-5xl mx-auto space-y-8">
@@ -47,7 +49,7 @@ export default async function ProfessionalDashboardPage() {
               Painel do Profissional
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Bem-vindo de volta, {profile?.full_name || 'Prestador'}! Veja abaixo seu resumo de atividades.
+              Bem-vindo de volta, {fullName}! Veja abaixo seu resumo de atividades.
             </p>
           </div>
 
