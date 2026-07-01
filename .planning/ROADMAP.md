@@ -8,7 +8,7 @@ O Solução Já será desenvolvido em 7 fases sequenciais focadas em construir u
 
 - [x] **Phase 1: Banco de Dados & Autenticação** - Setup do monorepo, schemas no Supabase e fluxos de cadastro/login com controle de acesso.
 - [x] **Phase 2: Perfil Profissional & Serviços** - Cadastro de perfis, gerenciamento de serviços e fotos do portfólio.
-- [ ] **Phase 3: Busca, Geolocalização & "Preciso Agora"** - Busca inteligente por geolocalização e botão de atendimento imediato.
+- [x] **Phase 3: Busca, Geolocalização & "Preciso Agora"** - Busca inteligente por geolocalização e botão de atendimento imediato.
 - [ ] **Phase 4: Agenda & Agendamentos** - Configuração da agenda semanal e fluxo básico de solicitação de serviços.
 - [ ] **Phase 5: Integração de Pagamento (Mercado Pago/Pix)** - Cobrança automática de sinal de reserva via Mercado Pago com confirmação instantânea.
 - [ ] **Phase 6: Avaliações, Notificações & Admin Panel** - Avaliação bilateral, notificações por WhatsApp Cloud API e painel admin de moderação.
@@ -57,9 +57,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: Configuração do PostGIS e funções de proximidade no banco de dados.
-- [ ] 03-02: Tela de busca avançada com filtros e ordenação por distância.
-- [ ] 03-03: Implementação do botão "Preciso Agora" e toggle de disponibilidade imediata.
+- [x] 03-01: Configuração do PostGIS e funções de proximidade no banco de dados.
+- [x] 03-02: Tela de busca avançada com filtros e ordenação por distância.
+- [x] 03-03: Implementação do botão "Preciso Agora" e toggle de disponibilidade imediata.
 
 ### Phase 4: Agenda & Agendamentos
 **Goal**: Implementar o sistema de agendamento de horários e controle da agenda do profissional.
@@ -125,7 +125,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Banco de Dados & Autenticação | 3/3 | Complete | 2026-06-28 |
 | 2. Perfil Profissional & Serviços | 3/3 | Complete | 2026-06-30 |
-| 3. Busca, Geolocalização & "Preciso Agora" | 0/3 | Not started | - |
+| 3. Busca, Geolocalização & "Preciso Agora" | 3/3 | Complete | 2026-07-01 |
 | 4. Agenda & Agendamentos | 0/3 | Not started | - |
 | 5. Integração de Pagamento | 0/2 | Not started | - |
 | 6. Avaliações, Notificações & Admin | 0/3 | Not started | - |
