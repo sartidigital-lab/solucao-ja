@@ -9,7 +9,7 @@ O Solução Já será desenvolvido em 7 fases sequenciais focadas em construir u
 - [x] **Phase 1: Banco de Dados & Autenticação** - Setup do monorepo, schemas no Supabase e fluxos de cadastro/login com controle de acesso.
 - [x] **Phase 2: Perfil Profissional & Serviços** - Cadastro de perfis, gerenciamento de serviços e fotos do portfólio.
 - [x] **Phase 3: Busca, Geolocalização & "Preciso Agora"** - Busca inteligente por geolocalização e botão de atendimento imediato.
-- [ ] **Phase 4: Agenda & Agendamentos** - Configuração da agenda semanal e fluxo básico de solicitação de serviços.
+- [x] **Phase 4: Agenda & Agendamentos** - Configuração da agenda semanal e fluxo básico de solicitação de serviços.
 - [ ] **Phase 5: Integração de Pagamento (Mercado Pago/Pix)** - Cobrança automática de sinal de reserva via Mercado Pago com confirmação instantânea.
 - [ ] **Phase 6: Avaliações, Notificações & Admin Panel** - Avaliação bilateral, notificações por WhatsApp Cloud API e painel admin de moderação.
 - [ ] **Phase 7: Planos & Destaques (Monetização)** - Planos de assinatura (Gratuito, Profissional, Destaque) com liberação de recursos.
@@ -73,9 +73,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: Configuração de agenda semanal de horários disponíveis.
-- [ ] 04-02: Criação de agendamentos pelo cliente e visualização no dashboard.
-- [ ] 04-03: Painel de gerenciamento de solicitações de agendamento do profissional e link WhatsApp.
+- [x] 04-01: Configuração de agenda semanal de horários disponíveis.
+- [x] 04-02: Criação de agendamentos pelo cliente e visualização no dashboard.
+- [x] 04-03: Painel de gerenciamento de solicitações de agendamento do profissional e link WhatsApp.
 
 ### Phase 5: Integração de Pagamento (Mercado Pago/Pix)
 **Goal**: Adicionar o pagamento de sinal de reserva via Pix integrado com o Mercado Pago.
@@ -126,7 +126,7 @@ Plans:
 | 1. Banco de Dados & Autenticação | 3/3 | Complete | 2026-06-28 |
 | 2. Perfil Profissional & Serviços | 3/3 | Complete | 2026-06-30 |
 | 3. Busca, Geolocalização & "Preciso Agora" | 3/3 | Complete | 2026-07-01 |
-| 4. Agenda & Agendamentos | 0/3 | Not started | - |
+| 4. Agenda & Agendamentos | 3/3 | Complete | 2026-07-01 |
 | 5. Integração de Pagamento | 0/2 | Not started | - |
 | 6. Avaliações, Notificações & Admin | 0/3 | Not started | - |
 | 7. Planos & Destaques | 0/2 | Not started | - |
