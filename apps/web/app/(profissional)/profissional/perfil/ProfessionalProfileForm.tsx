@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useActionState } from 'react';
+import React, { useActionState, useState } from 'react';
 import { updateProfessionalProfile } from '@/actions/profile';
 
 interface ProfessionalProfileFormProps {
@@ -9,6 +9,8 @@ interface ProfessionalProfileFormProps {
 }
 
 export default function ProfessionalProfileForm({ profile, professional }: ProfessionalProfileFormProps) {
+  const [policy, setPolicy] = useState(professional?.deposit_policy || 'no_deposit');
+
   const [state, action, isPending] = useActionState(
     async (prevState: any, formData: FormData) => {
       const fullName = formData.get('fullName') as string;
@@ -20,6 +22,8 @@ export default function ProfessionalProfileForm({ profile, professional }: Profe
       const attendanceType = formData.get('attendanceType') as 'home' | 'salon' | 'both';
       const serviceAreaRadiusKm = Number(formData.get('serviceAreaRadiusKm'));
       const isAvailableNow = formData.get('isAvailableNow') === 'true';
+      const depositPolicy = formData.get('depositPolicy') as 'no_deposit' | 'fixed_amount' | 'percentage';
+      const depositFixedAmount = Number(formData.get('depositFixedAmount'));
 
       const res = await updateProfessionalProfile({
         fullName,
@@ -31,6 +35,8 @@ export default function ProfessionalProfileForm({ profile, professional }: Profe
         attendanceType,
         serviceAreaRadiusKm,
         isAvailableNow,
+        depositPolicy,
+        depositFixedAmount,
       });
 
       return res || { success: true };
@@ -159,6 +165,34 @@ export default function ProfessionalProfileForm({ profile, professional }: Profe
               <option value="false">Ocupado / Indisponível</option>
             </select>
           </div>
+
+          <div>
+            <label className="block text-xs text-slate-400 mb-1">Política de Sinal (Reserva)</label>
+            <select
+              name="depositPolicy"
+              value={policy}
+              onChange={(e) => setPolicy(e.target.value)}
+              className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-4 py-2.5 text-sm text-white outline-none focus:border-teal-500 transition"
+            >
+              <option value="no_deposit">Sem sinal (Pagamento integral no local)</option>
+              <option value="percentage">Sinal padrão de 30% do valor do serviço</option>
+              <option value="fixed_amount">Sinal com Valor Fixo</option>
+            </select>
+          </div>
+
+          {policy === 'fixed_amount' && (
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Valor do Sinal Fixo (R$)</label>
+              <input
+                name="depositFixedAmount"
+                type="number"
+                min="0"
+                step="0.01"
+                defaultValue={professional?.deposit_fixed_amount || 0}
+                className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-4 py-2.5 text-sm text-white outline-none focus:border-teal-500 transition"
+              />
+            </div>
+          )}
 
           <div>
             <label className="block text-xs text-slate-400 mb-1">Sobre mim (Biografia)</label>
