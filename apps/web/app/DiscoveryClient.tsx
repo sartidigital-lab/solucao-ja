@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import * as Icons from 'lucide-react';
 import { searchProfessionalsAction } from '@/actions/search';
 
