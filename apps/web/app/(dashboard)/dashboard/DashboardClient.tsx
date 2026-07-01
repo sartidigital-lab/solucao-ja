@@ -2,6 +2,7 @@
 
 import React, { useTransition } from 'react';
 import * as Icons from 'lucide-react';
+import Link from 'next/link';
 import { updateBookingStatusAction } from '@/actions/bookings';
 
 interface DashboardClientProps {
@@ -152,18 +153,27 @@ export default function DashboardClient({ bookings }: DashboardClientProps) {
                     >
                       Cancelar
                     </button>
-                    <a
-                      href={`https://wa.me/55${phoneNum.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(
-                        profName
-                      )},%20sou%20o%20cliente%20do%20Solução%20Já.%20Gostaria%20de%20falar%20sobre%20o%20serviço%20de%20${encodeURIComponent(
-                        b.services?.name
-                      )}%2520agendado.`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-white font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
-                    >
-                      <Icons.MessageSquare className="h-3.5 w-3.5" /> Falar com Prestador
-                    </a>
+                    {b.status === 'awaiting_deposit' ? (
+                      <Link
+                        href={`/dashboard/pagamento/${b.id}`}
+                        className="py-2.5 bg-orange-600 hover:bg-orange-500 rounded-xl text-white font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer text-center"
+                      >
+                        <Icons.DollarSign className="h-3.5 w-3.5" /> Pagar Sinal Pix
+                      </Link>
+                    ) : (
+                      <a
+                        href={`https://wa.me/55${phoneNum.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(
+                          profName
+                        )},%20sou%20o%20cliente%20do%20Solução%20Já.%20Gostaria%20de%20falar%20sobre%20o%20serviço%20de%20${encodeURIComponent(
+                          b.services?.name
+                        )}%2520agendado.`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-white font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer text-center"
+                      >
+                        <Icons.MessageSquare className="h-3.5 w-3.5" /> Falar com Prestador
+                      </a>
+                    )}
                   </div>
                 </div>
               );
