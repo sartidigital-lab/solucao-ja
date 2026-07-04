@@ -215,18 +215,24 @@ export default function DashboardClient({ bookings }: DashboardClientProps) {
                     </span>
                     {b.status === 'completed' && (
                       <div className="flex items-center">
-                        {b.reviews && b.reviews.length > 0 ? (
-                          <span className="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-[10px] text-yellow-400 font-bold flex items-center gap-1">
-                            ★ {b.reviews[0].rating}/5
-                          </span>
-                        ) : (
-                          <Link
-                            href={`/dashboard/avaliar/${b.id}`}
-                            className="px-2.5 py-1 rounded bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/20 text-[10px] text-yellow-400 font-bold transition"
-                          >
-                            Avaliar
-                          </Link>
-                        )}
+                        {(() => {
+                          const review = Array.isArray(b.reviews) ? b.reviews[0] : b.reviews;
+                          if (review) {
+                            return (
+                              <span className="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-[10px] text-yellow-400 font-bold flex items-center gap-1">
+                                ★ {review.rating}/5
+                              </span>
+                            );
+                          }
+                          return (
+                            <Link
+                              href={`/dashboard/avaliar/${b.id}`}
+                              className="px-2.5 py-1 rounded bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/20 text-[10px] text-yellow-400 font-bold transition"
+                            >
+                              Avaliar
+                            </Link>
+                          );
+                        })()}
                       </div>
                     )}
                   </div>
