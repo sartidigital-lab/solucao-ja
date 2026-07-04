@@ -12,7 +12,7 @@ O Solução Já será desenvolvido em 7 fases sequenciais focadas em construir u
 - [x] **Phase 4: Agenda & Agendamentos** - Configuração da agenda semanal e fluxo básico de solicitação de serviços.
 - [x] **Phase 5: Integração de Pagamento (Mercado Pago/Pix)** - Cobrança automática de sinal de reserva via Mercado Pago com confirmação instantânea.
 - [x] **Phase 6: Avaliações, Notificações & Admin Panel** - Avaliação bilateral, notificações por WhatsApp Cloud API e painel admin de moderação.
-- [ ] **Phase 7: Planos & Destaques (Monetização)** - Planos de assinatura (Gratuito, Profissional, Destaque) com liberação de recursos.
+- [x] **Phase 7: Planos & Destaques (Monetização)** - Planos de assinatura (Gratuito, Profissional, Destaque) com liberação de recursos.
 
 ## Phase Details
 
@@ -116,8 +116,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 07-01: Configuração da tabela de planos e telas de assinatura do profissional.
-- [ ] 07-02: Gating de features de planos e ordenação prioritária na busca.
+- [x] 07-01: Configuração da tabela de planos e telas de assinatura do profissional.
+- [x] 07-02: Gating de features de planos e ordenação prioritária na busca.
 
 ## Progress
 
@@ -129,4 +129,4 @@ Plans:
 | 4. Agenda & Agendamentos | 3/3 | Complete | 2026-07-01 |
 | 5. Integração de Pagamento | 2/2 | Complete | 2026-07-01 |
 | 6. Avaliações, Notificações & Admin | 3/3 | Complete | 2026-07-04 |
-| 7. Planos & Destaques | 0/2 | Not started | - |
+| 7. Planos & Destaques | 2/2 | Complete | 2026-07-04 |
