@@ -25,7 +25,7 @@ export async function createService(formData: unknown) {
     .eq('id', user.id)
     .single();
 
-  const plan = professional?.subscription_plan || 'gratuito';
+  const plan = professional ? (professional as any).subscription_plan : 'gratuito';
 
   // Count existing services
   const { count } = await supabase

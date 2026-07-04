@@ -24,7 +24,7 @@ export async function addPortfolioImage(url: string, title?: string | null) {
     .eq('id', user.id)
     .single();
 
-  const plan = professional?.subscription_plan || 'gratuito';
+  const plan = professional ? (professional as any).subscription_plan : 'gratuito';
 
   let maxPhotos = 3;
   if (plan === 'profissional') maxPhotos = 10;
