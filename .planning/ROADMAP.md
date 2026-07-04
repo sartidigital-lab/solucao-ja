@@ -11,7 +11,7 @@ O Solução Já será desenvolvido em 7 fases sequenciais focadas em construir u
 - [x] **Phase 3: Busca, Geolocalização & "Preciso Agora"** - Busca inteligente por geolocalização e botão de atendimento imediato.
 - [x] **Phase 4: Agenda & Agendamentos** - Configuração da agenda semanal e fluxo básico de solicitação de serviços.
 - [x] **Phase 5: Integração de Pagamento (Mercado Pago/Pix)** - Cobrança automática de sinal de reserva via Mercado Pago com confirmação instantânea.
-- [ ] **Phase 6: Avaliações, Notificações & Admin Panel** - Avaliação bilateral, notificações por WhatsApp Cloud API e painel admin de moderação.
+- [x] **Phase 6: Avaliações, Notificações & Admin Panel** - Avaliação bilateral, notificações por WhatsApp Cloud API e painel admin de moderação.
 - [ ] **Phase 7: Planos & Destaques (Monetização)** - Planos de assinatura (Gratuito, Profissional, Destaque) com liberação de recursos.
 
 ## Phase Details
@@ -102,9 +102,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 06-01: Sistema de avaliações bilaterais e denúncias de conduta.
-- [ ] 06-02: Integração com WhatsApp Cloud API para notificações automáticas de status.
-- [ ] 06-03: Painel administrativo para moderação, métricas e verificação de profissionais.
+- [x] 06-01: Sistema de avaliações bilaterais e denúncias de conduta.
+- [x] 06-02: Integração com WhatsApp Cloud API para notificações automáticas de status.
+- [x] 06-03: Painel administrativo para moderação, métricas e verificação de profissionais.
 
 ### Phase 7: Planos & Destaques (Monetização)
 **Goal**: Implementar os planos de assinatura do profissional (Gratuito, Profissional, Destaque).
@@ -128,5 +128,5 @@ Plans:
 | 3. Busca, Geolocalização & "Preciso Agora" | 3/3 | Complete | 2026-07-01 |
 | 4. Agenda & Agendamentos | 3/3 | Complete | 2026-07-01 |
 | 5. Integração de Pagamento | 2/2 | Complete | 2026-07-01 |
-| 6. Avaliações, Notificações & Admin | 0/3 | Not started | - |
+| 6. Avaliações, Notificações & Admin | 3/3 | Complete | 2026-07-04 |
 | 7. Planos & Destaques | 0/2 | Not started | - |
