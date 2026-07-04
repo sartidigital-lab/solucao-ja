@@ -234,7 +234,11 @@ export default function BuscaClient({
                 return (
                   <div
                     key={p.id}
-                    className="bg-slate-900/30 border border-slate-900 rounded-2xl p-6 hover:border-slate-800 transition"
+                    className={`rounded-2xl p-6 transition ${
+                      p.subscription_plan === 'destaque'
+                        ? 'bg-gradient-to-r from-slate-900/60 to-amber-950/5 border border-amber-550/20 hover:border-amber-500/35 shadow-lg shadow-amber-950/5'
+                        : 'bg-slate-900/30 border border-slate-900 hover:border-slate-800'
+                    }`}
                   >
                     <div className="flex flex-col md:flex-row justify-between items-start gap-4">
                       {/* Left: Basic professional info */}
@@ -248,11 +252,16 @@ export default function BuscaClient({
                           )}
                         </div>
                         <div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex flex-wrap items-center gap-2">
                             <h3 className="text-lg font-bold text-white leading-tight">{p.full_name}</h3>
                             {p.is_verified && (
                               <span title="Verificado">
                                 <Icons.CheckCircle2 className="h-5 w-5 text-blue-400 fill-blue-950" />
+                              </span>
+                            )}
+                            {p.subscription_plan === 'destaque' && (
+                              <span className="px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/35 text-[9px] text-amber-400 font-bold uppercase tracking-wider flex items-center gap-0.5 animate-pulse">
+                                ★ Destaque
                               </span>
                             )}
                           </div>
