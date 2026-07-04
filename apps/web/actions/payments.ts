@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
+import { notifyStatusChange } from '@/lib/whatsapp';
 
 // Helper to determine if we should run in Mock mode
 const isMockMode = () => {
@@ -140,6 +141,9 @@ export async function simulateMercadoPagoWebhookAction(bookingId: string) {
   if (bookingError) {
     return { error: bookingError.message };
   }
+
+  // Trigger WhatsApp alerts for confirmed booking
+  await notifyStatusChange(bookingId, 'confirmed');
 
   revalidatePath('/dashboard');
   return { success: true };

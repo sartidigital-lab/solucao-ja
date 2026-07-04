@@ -48,6 +48,14 @@ export async function POST(req: Request) {
           .from('bookings')
           .update({ status: 'confirmed', deposit_status: 'paid', updated_at: new Date().toISOString() })
           .eq('id', payment.booking_id);
+
+        // Notify WhatsApp
+        try {
+          const { notifyStatusChange } = await import('@/lib/whatsapp');
+          await notifyStatusChange(payment.booking_id, 'confirmed');
+        } catch (e) {
+          console.error('Error triggering WhatsApp notification in mock webhook:', e);
+        }
       }
 
       return NextResponse.json({ success: true, message: 'Mock payment approved' });
@@ -79,6 +87,14 @@ export async function POST(req: Request) {
           .from('bookings')
           .update({ status: 'confirmed', deposit_status: 'paid', updated_at: new Date().toISOString() })
           .eq('id', paymentRow.booking_id);
+
+        // Notify WhatsApp
+        try {
+          const { notifyStatusChange } = await import('@/lib/whatsapp');
+          await notifyStatusChange(paymentRow.booking_id, 'confirmed');
+        } catch (e) {
+          console.error('Error triggering WhatsApp notification in live webhook:', e);
+        }
       }
     }
 

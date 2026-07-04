@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { bookingSchema, professionalScheduleSchema } from 'shared';
 import { revalidatePath } from 'next/cache';
+import { notifyStatusChange } from '@/lib/whatsapp';
 
 export async function createBookingAction(formData: unknown) {
   const result = bookingSchema.safeParse(formData);
@@ -69,6 +70,9 @@ export async function createBookingAction(formData: unknown) {
     return { error: insertError.message };
   }
 
+  // Trigger WhatsApp notification for new request
+  await notifyStatusChange(booking.id, 'created');
+
   revalidatePath('/dashboard');
   return { success: true, data: booking };
 }
@@ -113,6 +117,15 @@ export async function updateBookingStatusAction(bookingId: string, newStatus: st
 
   if (updateError) {
     return { error: updateError.message };
+  }
+
+  // Trigger WhatsApp notifications based on the new status
+  if (newStatus === 'confirmed') {
+    await notifyStatusChange(bookingId, 'confirmed');
+  } else if (newStatus === 'cancelled') {
+    await notifyStatusChange(bookingId, 'cancelled');
+  } else if (newStatus === 'completed') {
+    await notifyStatusChange(bookingId, 'completed');
   }
 
   revalidatePath('/dashboard');
