@@ -11,6 +11,8 @@ interface ProfessionalProfileFormProps {
 export default function ProfessionalProfileForm({ profile, professional }: ProfessionalProfileFormProps) {
   const [policy, setPolicy] = useState(professional?.deposit_policy || 'no_deposit');
 
+  const [plan, setPlan] = useState(professional?.subscription_plan || 'gratuito');
+
   const [state, action, isPending] = useActionState(
     async (prevState: any, formData: FormData) => {
       const fullName = formData.get('fullName') as string;
@@ -24,6 +26,7 @@ export default function ProfessionalProfileForm({ profile, professional }: Profe
       const isAvailableNow = formData.get('isAvailableNow') === 'true';
       const depositPolicy = formData.get('depositPolicy') as 'no_deposit' | 'fixed_amount' | 'percentage';
       const depositFixedAmount = Number(formData.get('depositFixedAmount'));
+      const subscriptionPlan = formData.get('subscriptionPlan') as 'gratuito' | 'profissional' | 'destaque';
 
       const res = await updateProfessionalProfile({
         fullName,
@@ -37,6 +40,7 @@ export default function ProfessionalProfileForm({ profile, professional }: Profe
         isAvailableNow,
         depositPolicy,
         depositFixedAmount,
+        subscriptionPlan,
       });
 
       return res || { success: true };
@@ -193,6 +197,97 @@ export default function ProfessionalProfileForm({ profile, professional }: Profe
               />
             </div>
           )}
+
+          <div className="md:col-span-2 border-t border-slate-800 pt-6">
+            <h3 className="text-sm font-bold text-slate-200 mb-4 flex items-center gap-1.5">
+              <span className="text-teal-400">⚡</span> Escolha seu Plano de Assinatura
+            </h3>
+            
+            <input type="hidden" name="subscriptionPlan" value={plan} />
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* Gratuito */}
+              <button
+                type="button"
+                onClick={() => setPlan('gratuito')}
+                className={`p-4 rounded-xl border text-left flex flex-col justify-between transition cursor-pointer ${
+                  plan === 'gratuito'
+                    ? 'border-teal-500 bg-teal-500/5'
+                    : 'border-slate-800 bg-slate-900/20 hover:border-slate-700'
+                }`}
+              >
+                <div>
+                  <span className="text-xs font-bold text-slate-400 block mb-1">Gratuito</span>
+                  <span className="text-xl font-black text-white">Grátis</span>
+                  <ul className="text-[10px] text-slate-450 space-y-1.5 mt-3 border-t border-slate-800/60 pt-3">
+                    <li>✓ Limite de 3 serviços</li>
+                    <li>✓ Limite de 3 fotos</li>
+                    <li className="text-slate-600">✗ Busca priorizada</li>
+                  </ul>
+                </div>
+                <div className={`mt-4 w-full py-1.5 rounded-lg text-center text-[10px] font-bold ${
+                  plan === 'gratuito' ? 'bg-teal-500 text-slate-950' : 'bg-slate-850 text-slate-400'
+                }`}>
+                  {plan === 'gratuito' ? 'Ativo' : 'Selecionar'}
+                </div>
+              </button>
+
+              {/* Profissional */}
+              <button
+                type="button"
+                onClick={() => setPlan('profissional')}
+                className={`p-4 rounded-xl border text-left flex flex-col justify-between transition cursor-pointer ${
+                  plan === 'profissional'
+                    ? 'border-teal-500 bg-teal-500/5'
+                    : 'border-slate-800 bg-slate-900/20 hover:border-slate-700'
+                }`}
+              >
+                <div>
+                  <span className="text-xs font-bold text-teal-400 block mb-1">Profissional</span>
+                  <span className="text-xl font-black text-white">R$ 29,90<span className="text-xs font-normal text-slate-500">/mês</span></span>
+                  <ul className="text-[10px] text-slate-450 space-y-1.5 mt-3 border-t border-slate-800/60 pt-3">
+                    <li>✓ Serviços ilimitados</li>
+                    <li>✓ Limite de 10 fotos</li>
+                    <li className="text-slate-650">✗ Busca priorizada</li>
+                  </ul>
+                </div>
+                <div className={`mt-4 w-full py-1.5 rounded-lg text-center text-[10px] font-bold ${
+                  plan === 'profissional' ? 'bg-teal-500 text-slate-950' : 'bg-slate-850 text-slate-400'
+                }`}>
+                  {plan === 'profissional' ? 'Ativo' : 'Selecionar'}
+                </div>
+              </button>
+
+              {/* Destaque */}
+              <button
+                type="button"
+                onClick={() => setPlan('destaque')}
+                className={`p-4 rounded-xl border text-left flex flex-col justify-between transition cursor-pointer relative overflow-hidden ${
+                  plan === 'destaque'
+                    ? 'border-amber-500 bg-amber-500/5'
+                    : 'border-slate-800 bg-slate-900/20 hover:border-slate-700'
+                }`}
+              >
+                <div className="absolute top-0 right-0 bg-amber-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-bl">
+                  POPULAR
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-amber-400 block mb-1">Destaque</span>
+                  <span className="text-xl font-black text-white">R$ 59,90<span className="text-xs font-normal text-slate-500">/mês</span></span>
+                  <ul className="text-[10px] text-slate-450 space-y-1.5 mt-3 border-t border-slate-800/60 pt-3">
+                    <li>✓ Serviços ilimitados</li>
+                    <li>✓ Limite de 30 fotos</li>
+                    <li className="text-amber-400 font-bold">✓ Busca priorizada (topo)</li>
+                  </ul>
+                </div>
+                <div className={`mt-4 w-full py-1.5 rounded-lg text-center text-[10px] font-bold ${
+                  plan === 'destaque' ? 'bg-amber-500 text-slate-950' : 'bg-slate-850 text-slate-400'
+                }`}>
+                  {plan === 'destaque' ? 'Ativo' : 'Selecionar'}
+                </div>
+              </button>
+            </div>
+          </div>
 
           <div>
             <label className="block text-xs text-slate-400 mb-1">Sobre mim (Biografia)</label>
