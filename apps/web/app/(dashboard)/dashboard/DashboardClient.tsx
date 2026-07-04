@@ -209,9 +209,27 @@ export default function DashboardClient({ bookings }: DashboardClientProps) {
                       Profissional: {profName} | {formatDateTime(b.scheduled_at)}
                     </p>
                   </div>
-                  <span className="font-bold text-slate-300 block mt-2 sm:mt-0">
-                    R$ {b.price.toFixed(2)}
-                  </span>
+                  <div className="flex items-center gap-4 mt-2 sm:mt-0">
+                    <span className="font-bold text-slate-300">
+                      R$ {b.price.toFixed(2)}
+                    </span>
+                    {b.status === 'completed' && (
+                      <div className="flex items-center">
+                        {b.reviews && b.reviews.length > 0 ? (
+                          <span className="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-[10px] text-yellow-400 font-bold flex items-center gap-1">
+                            ★ {b.reviews[0].rating}/5
+                          </span>
+                        ) : (
+                          <Link
+                            href={`/dashboard/avaliar/${b.id}`}
+                            className="px-2.5 py-1 rounded bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/20 text-[10px] text-yellow-400 font-bold transition"
+                          >
+                            Avaliar
+                          </Link>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })}

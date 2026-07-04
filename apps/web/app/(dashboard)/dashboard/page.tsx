@@ -20,7 +20,7 @@ export default async function ClientDashboardPage() {
 
   // Fetch client bookings
   const { data: bookings } = await (supabase.from('bookings') as any)
-    .select('*, services(*), professionals(*, profiles(*))')
+    .select('*, services(*), professionals(*, profiles(*)), reviews(*)')
     .eq('client_id', user.id)
     .order('scheduled_at', { ascending: false });
 

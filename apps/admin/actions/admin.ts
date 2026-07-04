@@ -21,7 +21,7 @@ export async function verifyProfessionalAction(
     .eq('id', user.id)
     .single();
 
-  if (!profile || profile.role !== 'admin') {
+  if (!profile || (profile as any).role !== 'admin') {
     return { error: 'Acesso restrito a administradores' };
   }
 
@@ -64,7 +64,7 @@ export async function createCategoryAction(
     .eq('id', user.id)
     .single();
 
-  if (!profile || profile.role !== 'admin') {
+  if (!profile || (profile as any).role !== 'admin') {
     return { error: 'Acesso restrito a administradores' };
   }
 
