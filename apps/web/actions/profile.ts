@@ -104,7 +104,7 @@ export async function updateProfessionalProfile(formData: unknown) {
     return { error: 'Dados inválidos' };
   }
 
-  const { fullName, phone, city, bairro, bio, cpfCnpj, attendanceType, serviceAreaRadiusKm, isAvailableNow, depositPolicy, depositFixedAmount } = result.data;
+  const { fullName, phone, city, bairro, bio, cpfCnpj, attendanceType, serviceAreaRadiusKm, isAvailableNow, depositPolicy, depositFixedAmount, subscriptionPlan } = result.data;
   const supabase = await createClient();
 
   const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -142,6 +142,7 @@ export async function updateProfessionalProfile(formData: unknown) {
       is_available_now: isAvailableNow,
       deposit_policy: depositPolicy,
       deposit_fixed_amount: depositFixedAmount,
+      subscription_plan: subscriptionPlan,
       updated_at: new Date().toISOString(),
     })
     .eq('id', user.id);

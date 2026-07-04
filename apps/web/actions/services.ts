@@ -18,6 +18,27 @@ export async function createService(formData: unknown) {
     return { error: 'Não autorizado' };
   }
 
+  // Fetch professional plan
+  const { data: professional } = await supabase
+    .from('professionals')
+    .select('subscription_plan')
+    .eq('id', user.id)
+    .single();
+
+  const plan = professional?.subscription_plan || 'gratuito';
+
+  // Count existing services
+  const { count } = await supabase
+    .from('services')
+    .select('*', { count: 'exact', head: true })
+    .eq('professional_id', user.id);
+
+  const existingCount = count || 0;
+
+  if (plan === 'gratuito' && existingCount >= 3) {
+    return { error: 'O plano Gratuito limita o cadastro a no máximo 3 serviços. Faça um upgrade para cadastrar serviços ilimitados.' };
+  }
+
   const { error } = await (supabase.from('services') as any).insert({
     professional_id: user.id,
     category_id: categoryId,
