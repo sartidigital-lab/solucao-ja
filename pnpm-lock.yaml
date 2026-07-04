@@ -14,6 +14,15 @@ importers:
 
   apps/admin:
     dependencies:
+      '@supabase/ssr':
+        specifier: ^0.12.0
+        version: 0.12.0(@supabase/supabase-js@2.108.2)
+      '@supabase/supabase-js':
+        specifier: ^2.108.2
+        version: 2.108.2
+      database:
+        specifier: workspace:*
+        version: link:../../packages/database
       lucide-react:
         specifier: latest
         version: 1.23.0(react@19.2.7)
@@ -26,6 +35,9 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.2.7(react@19.2.7)
+      shared:
+        specifier: workspace:*
+        version: link:../../packages/shared
       zod:
         specifier: ^3.24.1
         version: 3.25.76
