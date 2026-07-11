@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useTransition } from 'react';
 import * as Icons from 'lucide-react';
 import { searchProfessionalsAction } from '@/actions/search';
+import ProfessionalsMap from '@/components/map/ProfessionalsMap';
 
 interface BuscaClientProps {
   categories: any[];
@@ -52,6 +53,7 @@ export default function BuscaClient({
     initialLat && initialLng ? { lat: initialLat, lng: initialLng } : null
   );
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [professionals, setProfessionals] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loadingCoords, setLoadingCoords] = useState(!coords);
@@ -253,20 +255,57 @@ export default function BuscaClient({
         ) : (
           <div className="space-y-4">
             
-            {/* Header de Quantidade */}
-            <p className="text-xs font-bold text-muted bg-surface px-4 py-2 rounded-lg border border-border/65 self-start" aria-live="polite">
-              {professionals.length} profissional{professionals.length !== 1 ? 'is' : ''} encontrado{professionals.length !== 1 ? 's' : ''}
-            </p>
+            {/* Header de Controle de Visualização (Lista vs. Mapa) */}
+            <div className="flex justify-between items-center bg-surface border border-border p-2 rounded-xl shadow-2xs">
+              <p className="text-xs font-bold text-muted px-2" aria-live="polite">
+                {professionals.length} profissional{professionals.length !== 1 ? 'is' : ''} encontrado{professionals.length !== 1 ? 's' : ''}
+              </p>
+              
+              <div className="flex gap-1 bg-surface-2 p-0.5 rounded-lg border border-border/80">
+                <button
+                  type="button"
+                  onClick={() => setViewMode('list')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors ${viewMode === 'list' ? 'bg-white text-primary shadow-2xs' : 'text-muted hover:text-ink'}`}
+                >
+                  <Icons.List className="w-3.5 h-3.5" />
+                  Lista
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('map')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors ${viewMode === 'map' ? 'bg-white text-primary shadow-2xs' : 'text-muted hover:text-ink'}`}
+                >
+                  <Icons.Map className="w-3.5 h-3.5" />
+                  Mapa
+                </button>
+              </div>
+            </div>
 
-            {/* Lista dos cards */}
-            <div className="flex flex-col gap-4">
-              {professionals.map((p) => {
-                const isExpanded = expandedId === p.id;
-                const whatsappHref = p.phone
-                  ? `https://wa.me/55${p.phone.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(p.full_name)}%2C%20gostaria%20de%20conversar%20sobre%20seus%20serviços.`
-                  : null;
+            {/* Renderização Condicional: Lista ou Mapa */}
+            {viewMode === 'map' ? (
+              <ProfessionalsMap
+                professionals={professionals}
+                userCoords={coords}
+                onSelectProfessional={(id) => {
+                  setViewMode('list');
+                  setExpandedId(id);
+                  setTimeout(() => {
+                    const el = document.getElementById(`expand-${id}`);
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                  }, 200);
+                }}
+              />
+            ) : (
+              <div className="flex flex-col gap-4">
+                {professionals.map((p) => {
+                  const isExpanded = expandedId === p.id;
+                  const whatsappHref = p.phone
+                    ? `https://wa.me/55${p.phone.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(p.full_name)}%2C%20gostaria%20de%20conversar%20sobre%20seus%20serviços.`
+                    : null;
 
-                const isDestaque = p.subscription_plan === 'destaque';
+                  const isDestaque = p.subscription_plan === 'destaque';
 
                 return (
                   <article
@@ -433,10 +472,10 @@ export default function BuscaClient({
                 );
               })}
             </div>
-            
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
+  </div>
   );
 }

@@ -25,7 +25,7 @@ importers:
         version: link:../../packages/database
       lucide-react:
         specifier: latest
-        version: 1.23.0(react@19.2.7)
+        version: 1.24.0(react@19.2.7)
       next:
         specifier: ^16.2.9
         version: 16.2.9(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -47,7 +47,7 @@ importers:
         version: 4.3.2
       '@types/node':
         specifier: latest
-        version: 26.1.0
+        version: 26.1.1
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.17
@@ -66,6 +66,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@googlemaps/js-api-loader':
+        specifier: ^1.16.6
+        version: 1.16.10
       '@supabase/ssr':
         specifier: ^0.12.0
         version: 0.12.0(@supabase/supabase-js@2.108.2)
@@ -77,7 +80,7 @@ importers:
         version: link:../../packages/database
       lucide-react:
         specifier: latest
-        version: 1.23.0(react@19.2.7)
+        version: 1.24.0(react@19.2.7)
       mercadopago:
         specifier: ^3.2.0
         version: 3.2.0
@@ -100,9 +103,12 @@ importers:
       '@tailwindcss/postcss':
         specifier: ^4.3.2
         version: 4.3.2
+      '@types/google.maps':
+        specifier: ^3.65.2
+        version: 3.65.2
       '@types/node':
         specifier: latest
-        version: 26.1.0
+        version: 26.1.1
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.17
@@ -143,6 +149,9 @@ packages:
 
   '@emnapi/runtime@1.11.1':
     resolution: {integrity: sha512-vgj7R3y3Wgx24IQaGPA/R6YFXLHVMOZ0uVEyIQPaWs+rd1AzfEMXlAC22FYwO1XkKR6NPsq7mUandH8oIRdZFw==}
+
+  '@googlemaps/js-api-loader@1.16.10':
+    resolution: {integrity: sha512-c2erv2k7P2ilYzMmtYcMgAR21AULosQuUHJbStnrvRk2dG93k5cqptDrh9A8p+ZNlyhiqEOgHW7N9PAizdUM7Q==}
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -501,8 +510,11 @@ packages:
     cpu: [arm64]
     os: [win32]
 
-  '@types/node@26.1.0':
-    resolution: {integrity: sha512-O0A1G3xPGy4w7AgQdAQYUlQ+BKk2Oovw8eRpofyp5KdBZULnbe+WqaOVNrm705SHphCiG4XHsACrSmPu1f+Kgw==}
+  '@types/google.maps@3.65.2':
+    resolution: {integrity: sha512-e52bmOhGCQSNabFpL48iQlwJybq6rfns8NUVJ20MR7CdPlHQ2RmSCnPbJfrUYJfogrE4OiHQTZ4LXpop+eer1w==}
+
+  '@types/node@26.1.1':
+    resolution: {integrity: sha512-nxAkRSVkN1Y0JC1W8ky/fTfkGsMmcrRsbx+3XoZE+rMOX71kLYTV7fLXpqud1GpbpP5TuffXFqfX7fH2GgZREw==}
 
   '@types/react-dom@19.2.3':
     resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
@@ -619,8 +631,8 @@ packages:
     resolution: {integrity: sha512-NXYBzinNrblfraPGyrbPoD19C1h9lfI/1mzgWYvXUTe414Gz/X1FD2XBZSZM7rRTrMA8JL3OtAaGifrIKhQ5yQ==}
     engines: {node: '>= 12.0.0'}
 
-  lucide-react@1.23.0:
-    resolution: {integrity: sha512-38BpJcD0JhFosxHApP/BYsBetLpQFRoTRzEzstM/XCc3jsAG7wqaY1lgVwxiUe3xqYE+lNxo2PkCmYwXWrwwIw==}
+  lucide-react@1.24.0:
+    resolution: {integrity: sha512-YT6mBD8lGKkg4nM39enlm94/sfJIiW0YKUT60fBy4YK8tai31ylg1VhGNWxkpSKHo9UagfnZqwIff3HTDQwXeA==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -742,6 +754,8 @@ snapshots:
     dependencies:
       tslib: 2.8.1
     optional: true
+
+  '@googlemaps/js-api-loader@1.16.10': {}
 
   '@img/colour@1.1.0':
     optional: true
@@ -1013,7 +1027,9 @@ snapshots:
   '@turbo/windows-arm64@2.10.0':
     optional: true
 
-  '@types/node@26.1.0':
+  '@types/google.maps@3.65.2': {}
+
+  '@types/node@26.1.1':
     dependencies:
       undici-types: 8.3.0
 
@@ -1097,7 +1113,7 @@ snapshots:
       lightningcss-win32-arm64-msvc: 1.32.0
       lightningcss-win32-x64-msvc: 1.32.0
 
-  lucide-react@1.23.0(react@19.2.7):
+  lucide-react@1.24.0(react@19.2.7):
     dependencies:
       react: 19.2.7
 
