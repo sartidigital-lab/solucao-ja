@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-05T08:30:00Z",
+  "title": "Design System: Solução Já Admin",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Terracotta Orange", "canonical": "oklch(0.62 0.19 49)", "tonalRamp": ["#431407", "#7c2d12", "#9a3412", "#c2410c", "#ea580c", "#f97316", "#ffedd5", "#fff7ed"] },
+      "accent": { "role": "secondary", "displayName": "Warm Bronze", "canonical": "oklch(0.48 0.16 28)", "tonalRamp": ["#422006", "#713f12", "#854d0e", "#a16207", "#ca8a04", "#eab308", "#fef9c3", "#fefec9"] },
+      "neutral-bg": { "role": "neutral", "displayName": "Clean White", "canonical": "#ffffff", "tonalRamp": ["#000000", "#171717", "#262626", "#404040", "#737373", "#d4d4d4", "#f5f5f5", "#ffffff"] },
+      "neutral-surface": { "role": "neutral", "displayName": "Canvas Gray", "canonical": "oklch(0.975 0 0)", "tonalRamp": ["#0f172a", "#1e293b", "#334155", "#475569", "#64748b", "#cbd5e1", "#f1f5f9", "#fafafa"] },
+      "neutral-border": { "role": "neutral", "displayName": "Separator Gray", "canonical": "oklch(0.905 0 0)", "tonalRamp": ["#111827", "#1f2937", "#374151", "#4b5563", "#9ca3af", "#d1d5db", "#f3f4f6", "#e5e5e5"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display Title", "purpose": "Título principal das telas e seções do painel administrativo." },
+      "body": { "displayName": "Body Text", "purpose": "Texto padrão para dados, tabelas, descrições e interfaces de formulário." }
+    },
+    "shadows": [
+      { "name": "ambient-low", "value": "0 1px 3px rgba(38,38,38,0.08)", "purpose": "Sombras pequenas em botoes e cards de interacao comum." },
+      { "name": "ambient-mid", "value": "0 4px 8px rgba(38,38,38,0.10)", "purpose": "Sombras suaves em menus suspensos, popovers e caixas de dialogo." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Efeito de transição de estado nos botoes e inputs." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botão Primário",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Utilizado para as ações dominantes da tela (ex: Salvar, Aprovar, Editar).",
+      "html": "<button class=\"ds-btn-primary\">Aprovar Profissional</button>",
+      "css": ".ds-btn-primary { font-family: \"DM Sans\", sans-serif; font-weight: 600; font-size: 14px; background: oklch(0.62 0.19 49); color: #ffffff; padding: 10px 16px; border: 1.5px solid oklch(0.62 0.19 49); border-radius: 8px; cursor: pointer; transition: background-color 150ms, border-color 150ms; } .ds-btn-primary:hover { background: oklch(0.55 0.20 47); border-color: oklch(0.55 0.20 47); }"
+    },
+    {
+      "name": "Botão Secundário",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Ações secundárias ou de cancelamento em modais e formulários.",
+      "html": "<button class=\"ds-btn-secondary\">Voltar</button>",
+      "css": ".ds-btn-secondary { font-family: \"DM Sans\", sans-serif; font-weight: 600; font-size: 14px; background: #ffffff; color: oklch(0.18 0.008 49); border: 1.5px solid oklch(0.80 0 0); border-radius: 8px; padding: 10px 16px; cursor: pointer; transition: background-color 150ms; } .ds-btn-secondary:hover { background: oklch(0.975 0 0); }"
+    },
+    {
+      "name": "Input de Texto",
+      "kind": "input",
+      "description": "Formulários e filtros de busca do painel admin.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Buscar profissional...\" />",
+      "css": ".ds-input { font-family: \"DM Sans\", sans-serif; font-size: 15px; color: oklch(0.18 0.008 49); background: #ffffff; border: 1.5px solid oklch(0.905 0 0); border-radius: 8px; padding: 10px 14px; width: 100%; outline: none; transition: border-color 150ms, box-shadow 150ms; } .ds-input:hover { border-color: oklch(0.80 0 0); } .ds-input:focus { border-color: oklch(0.62 0.19 49); box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.12); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Clean Curator",
+    "overview": "O design de interface do painel administrativo do Solução Já busca transmitir a sobriedade operacional e o profissionalismo exigido de uma plataforma de intermediação local. Por ser uma ferramenta intensiva focada no gerenciamento, a densidade visual prioriza a legibilidade de longa duração e o conforto visual.",
+    "keyCharacteristics": [
+      "Foco no Conteúdo: Livre de artefatos visuais chamativos e decorações, a informação é a protagonista.",
+      "Espaço Negativo Ativo: Distribuição ampla para evitar sensação de saturação no gerenciamento diário.",
+      "Fidelidade de Estado: O uso de cores reflete diretamente o estado semântico de cada profissional ou transação na ferramenta."
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "A cor laranja primária da marca deve preencher menos de 10% do espaço de tela.", "section": "colors" },
+      { "name": "The Flat-By-Default Rule", "body": "Superfícies e tabelas de dados não possuem sombras decorativas de repouso.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do manter espaçamento de no mínimo 12px vertical nas linhas de tabelas para manter dados arejados.",
+      "Do utilizar badges de cores consistentes para denotar o status do profissional (ex: Verde para Ativo, Amarelo para Pendente, Vermelho para Rejeitado).",
+      "Do usar a fonte DM Sans em pesos consistentes (Regular, Semibold, Bold) como a única família."
+    ],
+    "donts": [
+      "Don't utilizar side-stripe borders coloridas como acento decorativo em cards ou tabelas.",
+      "Don't usar degradê de cores no background ou gradiente de cores nos textos.",
+      "Don't usar glassmorphism em modais ou componentes de cabeçalho.",
+      "Don't colocar borda e box-shadow de alta difusão no mesmo elemento."
+    ]
+  }
+}

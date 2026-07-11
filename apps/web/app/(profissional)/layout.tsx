@@ -1,44 +1,85 @@
 import React from 'react';
 import Link from 'next/link';
+import { LayoutDashboard, Briefcase, Image, User, LogOut } from 'lucide-react';
 import { logout } from '@/actions/auth';
+import Logo from '@/components/Logo';
 
-export default function ProfessionalLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const navItems = [
+  { href: '/profissional', label: 'Painel', icon: LayoutDashboard },
+  { href: '/profissional/servicos', label: 'Serviços', icon: Briefcase },
+  { href: '/profissional/portfolio', label: 'Portfólio', icon: Image },
+  { href: '/profissional/perfil', label: 'Meu Perfil', icon: User },
+];
+
+export default function ProfessionalLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col">
-      {/* Premium Header */}
-      <header className="border-b border-slate-900 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
-        <Link href="/profissional" className="text-xl font-bold bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">
-          Solução Já - Profissional
-        </Link>
-        <nav className="flex items-center gap-6">
-          <Link href="/profissional" className="text-sm text-slate-300 hover:text-white transition">
-            Painel
-          </Link>
-          <Link href="/profissional/servicos" className="text-sm text-slate-300 hover:text-white transition">
-            Serviços
-          </Link>
-          <Link href="/profissional/portfolio" className="text-sm text-slate-300 hover:text-white transition">
-            Portfólio
-          </Link>
-          <Link href="/profissional/perfil" className="text-sm text-slate-300 hover:text-white transition">
-            Meu Perfil
-          </Link>
-          <form action={logout}>
-            <button type="submit" className="text-sm text-red-400 hover:text-red-300 transition cursor-pointer">
-              Sair
-            </button>
-          </form>
-        </nav>
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', display: 'flex', flexDirection: 'column' }}>
+      {/* ─── Header ───────────────────────────────────────────────── */}
+      <header
+        className="sticky top-0"
+        style={{
+          zIndex: 'var(--z-sticky)',
+          background: 'var(--color-bg)',
+          borderBottom: '1px solid var(--color-border)',
+        }}
+      >
+        <div className="container-app" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
+          {/* Logo */}
+          <div className="flex items-center gap-2">
+            <Link
+              href="/profissional"
+              aria-label="Solução Já — Painel do Profissional"
+              style={{ textDecoration: 'none' }}
+            >
+              <Logo size={28} />
+            </Link>
+            <span
+              style={{
+                padding: '0.125rem 0.5rem',
+                borderRadius: 'var(--radius-full)',
+                background: 'var(--color-primary-light)',
+                color: 'var(--color-primary-dark)',
+                fontSize: '0.6875rem',
+                fontWeight: 700,
+              }}
+            >
+              Profissional
+            </span>
+          </div>
+
+          {/* Nav */}
+          <nav style={{ display: 'flex', alignItems: 'center', gap: '0.125rem' }}>
+            {navItems.map(({ href, label, icon: Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className="btn btn-ghost btn-sm"
+                style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}
+              >
+                <Icon style={{ width: 15, height: 15 }} aria-hidden="true" />
+                <span className="hidden-mobile">{label}</span>
+              </Link>
+            ))}
+            <form action={logout}>
+              <button
+                type="submit"
+                className="btn btn-ghost btn-sm"
+                style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', color: 'var(--color-error)' }}
+              >
+                <LogOut style={{ width: 15, height: 15 }} aria-hidden="true" />
+                <span className="hidden-mobile">Sair</span>
+              </button>
+            </form>
+          </nav>
+        </div>
       </header>
-      
-      {/* Page Content */}
-      <div className="flex-1 w-full max-w-7xl mx-auto p-6">
-        {children}
-      </div>
+
+      {/* ─── Content ──────────────────────────────────────────────── */}
+      <main style={{ flex: 1, padding: '2rem 0 4rem' }}>
+        <div className="container-app" style={{ maxWidth: 960 }}>
+          {children}
+        </div>
+      </main>
     </div>
   );
 }

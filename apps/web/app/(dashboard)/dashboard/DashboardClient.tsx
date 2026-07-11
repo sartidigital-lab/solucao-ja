@@ -9,239 +9,313 @@ interface DashboardClientProps {
   bookings: any[];
 }
 
+type StatusKey = 'pending_confirmation' | 'awaiting_deposit' | 'confirmed' | 'completed' | 'cancelled';
+
+const statusConfig: Record<StatusKey, { label: string; badge: string; icon: React.ElementType }> = {
+  pending_confirmation: { label: 'Aguardando confirmação', badge: 'warning', icon: Icons.Clock },
+  awaiting_deposit:     { label: 'Aguardando sinal',        badge: 'warning', icon: Icons.DollarSign },
+  confirmed:            { label: 'Confirmado',              badge: 'success', icon: Icons.CheckCircle2 },
+  completed:            { label: 'Concluído',               badge: 'info',    icon: Icons.Check },
+  cancelled:            { label: 'Cancelado',               badge: 'error',   icon: Icons.XCircle },
+};
+
+function getStatusConfig(status: string) {
+  return statusConfig[status as StatusKey] ?? { label: status, badge: 'neutral', icon: Icons.HelpCircle };
+}
+
+function formatDateTime(isoString: string) {
+  const d = new Date(isoString);
+  return d.toLocaleString('pt-BR', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', timeZone: 'UTC',
+  });
+}
+
 export default function DashboardClient({ bookings }: DashboardClientProps) {
   const [isPending, startTransition] = useTransition();
 
   const handleCancelBooking = (bookingId: string) => {
-    if (!confirm('Tem certeza de que deseja cancelar este agendamento?')) {
-      return;
-    }
-
+    if (!confirm('Tem certeza de que deseja cancelar este agendamento?')) return;
     startTransition(async () => {
       const res = await updateBookingStatusAction(bookingId, 'cancelled');
       if (res.error) {
-        alert(res.error);
+        alert('Não foi possível cancelar. Tente novamente ou entre em contato com o suporte.');
       } else {
         window.location.reload();
       }
     });
   };
 
-  const getStatusDetails = (status: string) => {
-    switch (status) {
-      case 'pending_confirmation':
-        return {
-          label: 'Aguardando Confirmação',
-          color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-          icon: Icons.Clock,
-        };
-      case 'awaiting_deposit':
-        return {
-          label: 'Aguardando Sinal',
-          color: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
-          icon: Icons.DollarSign,
-        };
-      case 'confirmed':
-        return {
-          label: 'Confirmado',
-          color: 'bg-green-500/10 text-green-400 border-green-500/20',
-          icon: Icons.CheckCircle2,
-        };
-      case 'completed':
-        return {
-          label: 'Concluído',
-          color: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-          icon: Icons.Check,
-        };
-      case 'cancelled':
-        return {
-          label: 'Cancelado',
-          color: 'bg-red-500/10 text-red-400 border-red-500/20',
-          icon: Icons.XCircle,
-        };
-      default:
-        return {
-          label: status,
-          color: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
-          icon: Icons.HelpCircle,
-        };
-    }
-  };
-
-  const formatDateTime = (isoString: string) => {
-    const d = new Date(isoString);
-    return `${d.toLocaleDateString('pt-BR')} às ${d.toLocaleTimeString('pt-BR', {
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZone: 'UTC',
-    })}`;
-  };
-
   const activeBookings = bookings.filter((b) => b.status !== 'completed' && b.status !== 'cancelled');
-  const pastBookings = bookings.filter((b) => b.status === 'completed' || b.status === 'cancelled');
+  const pastBookings   = bookings.filter((b) => b.status === 'completed' || b.status === 'cancelled');
 
   return (
-    <div className="space-y-10">
-      {/* Active Bookings Section */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-bold text-white flex items-center gap-2">
-          <Icons.CalendarDays className="h-5 w-5 text-blue-400" /> Meus Agendamentos Ativos
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+
+      {/* ─── Active Bookings ─────────────────────────────────────── */}
+      <section>
+        <h2
+          style={{
+            fontSize: '1rem',
+            fontWeight: 700,
+            color: 'var(--color-ink)',
+            letterSpacing: '-0.01em',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            marginBottom: '1.25rem',
+          }}
+        >
+          <Icons.CalendarDays style={{ width: 16, height: 16, color: 'var(--color-primary)' }} aria-hidden="true" />
+          Agendamentos ativos
         </h2>
 
         {activeBookings.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/10 p-12 text-center text-slate-500 text-sm">
-            Você não possui agendamentos ativos no momento. Que tal solicitar um serviço?
+          <div
+            style={{
+              background: 'var(--color-surface)',
+              border: '1.5px dashed var(--color-border)',
+              borderRadius: 'var(--radius-xl)',
+              padding: '3rem 2rem',
+              textAlign: 'center',
+            }}
+          >
+            <Icons.CalendarX2
+              style={{ width: 28, height: 28, color: 'var(--color-subtle)', margin: '0 auto 0.875rem' }}
+              aria-hidden="true"
+            />
+            <p style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--color-ink)', marginBottom: '0.375rem' }}>
+              Nenhum agendamento ativo
+            </p>
+            <p style={{ fontSize: '0.875rem', color: 'var(--color-muted)', margin: '0 auto 1.25rem', maxWidth: '36ch' }}>
+              Que tal buscar um profissional para o seu próximo serviço?
+            </p>
+            <Link href="/busca" className="btn btn-primary btn-sm" style={{ display: 'inline-flex' }}>
+              Buscar profissional
+            </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
             {activeBookings.map((b) => {
-              const status = getStatusDetails(b.status);
-              const StatusIcon = status.icon;
+              const cfg = getStatusConfig(b.status);
+              const StatusIcon = cfg.icon;
               const profName = b.professionals?.profiles?.full_name || 'Profissional';
               const phoneNum = b.professionals?.profiles?.phone || '';
+              const whatsappHref = phoneNum
+                ? `https://wa.me/55${phoneNum.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(profName)}%2C%20sou%20cliente%20da%20Solução%20Já.%20Gostaria%20de%20falar%20sobre%20o%20serviço%20de%20${encodeURIComponent(b.services?.name || 'serviço')}.`
+                : null;
+
+              return (
+                <article
+                  key={b.id}
+                  className="card"
+                  style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+                >
+                  {/* Header */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem' }}>
+                    <div>
+                      <span className={`badge badge-${cfg.badge}`} style={{ marginBottom: '0.5rem' }}>
+                        <StatusIcon style={{ width: 10, height: 10 }} aria-hidden="true" />
+                        {cfg.label}
+                      </span>
+                      <h3
+                        style={{
+                          fontSize: '0.9375rem',
+                          fontWeight: 700,
+                          color: 'var(--color-ink)',
+                          margin: 0,
+                          letterSpacing: '-0.01em',
+                          lineHeight: 1.3,
+                        }}
+                      >
+                        {b.services?.name}
+                      </h3>
+                      <p style={{ fontSize: '0.8125rem', color: 'var(--color-muted)', margin: '0.25rem 0 0' }}>
+                        com {profName}
+                      </p>
+                    </div>
+                    <span
+                      style={{
+                        fontSize: '1rem',
+                        fontWeight: 800,
+                        color: 'var(--color-ink)',
+                        flexShrink: 0,
+                        letterSpacing: '-0.01em',
+                      }}
+                    >
+                      R$ {b.price.toFixed(2)}
+                    </span>
+                  </div>
+
+                  {/* Meta */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.375rem',
+                      padding: '0.875rem',
+                      background: 'var(--color-surface)',
+                      borderRadius: 'var(--radius-md)',
+                      fontSize: '0.8125rem',
+                      color: 'var(--color-muted)',
+                    }}
+                  >
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <Icons.Clock style={{ width: 13, height: 13, color: 'var(--color-subtle)', flexShrink: 0 }} aria-hidden="true" />
+                      {formatDateTime(b.scheduled_at)} · {b.duration_minutes} min
+                    </span>
+                    {b.address && (
+                      <span style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                        <Icons.MapPin style={{ width: 13, height: 13, color: 'var(--color-subtle)', flexShrink: 0, marginTop: 1 }} aria-hidden="true" />
+                        <span style={{ overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical' }}>{b.address}</span>
+                      </span>
+                    )}
+                    {b.deposit_amount > 0 && (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: b.deposit_status === 'paid' ? 'var(--color-success)' : 'var(--color-warning)' }}>
+                        <Icons.AlertCircle style={{ width: 13, height: 13, flexShrink: 0 }} aria-hidden="true" />
+                        Sinal R$ {b.deposit_amount.toFixed(2)} · {b.deposit_status === 'paid' ? 'Pago' : 'Pendente'}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Actions */}
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      type="button"
+                      id={`cancel-${b.id}`}
+                      onClick={() => handleCancelBooking(b.id)}
+                      disabled={isPending}
+                      className="btn btn-secondary btn-sm"
+                      style={{ flex: 1, color: 'var(--color-error)', borderColor: 'var(--color-border)' }}
+                    >
+                      Cancelar
+                    </button>
+
+                    {b.status === 'awaiting_deposit' ? (
+                      <Link
+                        href={`/dashboard/pagamento/${b.id}`}
+                        id={`pay-${b.id}`}
+                        className="btn btn-primary btn-sm"
+                        style={{ flex: 2, textAlign: 'center', display: 'inline-flex', justifyContent: 'center' }}
+                      >
+                        <Icons.DollarSign style={{ width: 13, height: 13 }} aria-hidden="true" />
+                        Pagar sinal (Pix)
+                      </Link>
+                    ) : whatsappHref ? (
+                      <a
+                        href={whatsappHref}
+                        id={`whatsapp-${b.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Falar com ${profName} no WhatsApp`}
+                        className="btn btn-sm"
+                        style={{ flex: 2, background: '#25D366', color: '#fff', border: 'none', display: 'inline-flex', justifyContent: 'center', gap: '0.375rem' }}
+                      >
+                        <Icons.MessageSquare style={{ width: 13, height: 13 }} aria-hidden="true" />
+                        Falar com prestador
+                      </a>
+                    ) : null}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* ─── History ─────────────────────────────────────────────── */}
+      {pastBookings.length > 0 && (
+        <section>
+          <h2
+            style={{
+              fontSize: '1rem',
+              fontWeight: 700,
+              color: 'var(--color-ink)',
+              letterSpacing: '-0.01em',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              marginBottom: '1.25rem',
+            }}
+          >
+            <Icons.History style={{ width: 16, height: 16, color: 'var(--color-subtle)' }} aria-hidden="true" />
+            Histórico de atendimentos
+          </h2>
+
+          <div
+            style={{
+              background: 'var(--color-bg)',
+              border: '1.5px solid var(--color-border)',
+              borderRadius: 'var(--radius-lg)',
+              overflow: 'hidden',
+            }}
+          >
+            {pastBookings.map((b, i) => {
+              const cfg = getStatusConfig(b.status);
+              const profName = b.professionals?.profiles?.full_name || 'Profissional';
+              const review = Array.isArray(b.reviews) ? b.reviews[0] : b.reviews;
 
               return (
                 <div
                   key={b.id}
-                  className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between hover:border-slate-700 transition"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '1rem',
+                    flexWrap: 'wrap',
+                    padding: '0.875rem 1.25rem',
+                    borderTop: i > 0 ? '1px solid var(--color-border)' : 'none',
+                  }}
                 >
-                  <div className="space-y-4">
-                    {/* Header info */}
-                    <div className="flex justify-between items-start gap-4">
-                      <div>
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${status.color} flex items-center gap-1 w-fit mb-1.5`}>
-                          <StatusIcon className="h-3 w-3" /> {status.label}
-                        </span>
-                        <h3 className="font-bold text-white text-base leading-snug">{b.services?.name}</h3>
-                        <p className="text-xs text-slate-400 mt-0.5">Com: {profName}</p>
-                      </div>
-                      <span className="text-sm font-extrabold text-blue-400 flex-shrink-0">
-                        R$ {b.price.toFixed(2)}
-                      </span>
-                    </div>
-
-                    {/* Meta info */}
-                    <div className="space-y-1 text-xs text-slate-400 border-t border-slate-800/60 pt-3">
-                      <div className="flex items-center gap-2">
-                        <Icons.Clock className="h-4 w-4 text-slate-500" />
-                        <span>{formatDateTime(b.scheduled_at)} ({b.duration_minutes} min)</span>
-                      </div>
-                      {b.address && (
-                        <div className="flex items-center gap-2">
-                          <Icons.MapPin className="h-4 w-4 text-slate-500" />
-                          <span className="line-clamp-1">{b.address}</span>
-                        </div>
-                      )}
-                      {b.deposit_amount > 0 && (
-                        <div className="flex items-center gap-2">
-                          <Icons.AlertCircle className="h-4 w-4 text-orange-400" />
-                          <span className="text-orange-400">
-                            Sinal: R$ {b.deposit_amount.toFixed(2)} ({b.deposit_status === 'paid' ? 'Pago' : 'Pendente'})
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Actions buttons */}
-                  <div className="grid grid-cols-2 gap-3 mt-6 border-t border-slate-800/60 pt-4">
-                    <button
-                      type="button"
-                      onClick={() => handleCancelBooking(b.id)}
-                      disabled={isPending}
-                      className="py-2.5 rounded-xl border border-slate-800 hover:bg-red-950/20 hover:text-red-400 text-xs font-semibold text-slate-400 transition cursor-pointer disabled:opacity-50"
-                    >
-                      Cancelar
-                    </button>
-                    {b.status === 'awaiting_deposit' ? (
-                      <Link
-                        href={`/dashboard/pagamento/${b.id}`}
-                        className="py-2.5 bg-orange-600 hover:bg-orange-500 rounded-xl text-white font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer text-center"
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.2rem' }}>
+                      <h4
+                        style={{
+                          fontSize: '0.875rem',
+                          fontWeight: 700,
+                          color: 'var(--color-ink)',
+                          margin: 0,
+                          letterSpacing: '-0.01em',
+                        }}
                       >
-                        <Icons.DollarSign className="h-3.5 w-3.5" /> Pagar Sinal Pix
-                      </Link>
-                    ) : (
-                      <a
-                        href={`https://wa.me/55${phoneNum.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(
-                          profName
-                        )},%20sou%20o%20cliente%20do%20Solução%20Já.%20Gostaria%20de%20falar%20sobre%20o%20serviço%20de%20${encodeURIComponent(
-                          b.services?.name
-                        )}%2520agendado.`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-white font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer text-center"
-                      >
-                        <Icons.MessageSquare className="h-3.5 w-3.5" /> Falar com Prestador
-                      </a>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      {/* History Bookings Section */}
-      <section className="space-y-4 pt-4 border-t border-slate-900">
-        <h2 className="text-lg font-bold text-slate-300 flex items-center gap-2">
-          <Icons.History className="h-5 w-5 text-slate-500" /> Histórico de Atendimentos
-        </h2>
-
-        {pastBookings.length === 0 ? (
-          <p className="text-xs text-slate-500 italic">Nenhum atendimento anterior finalizado ou cancelado.</p>
-        ) : (
-          <div className="bg-slate-900/20 rounded-2xl border border-slate-900 overflow-hidden divide-y divide-slate-900">
-            {pastBookings.map((b) => {
-              const status = getStatusDetails(b.status);
-              const profName = b.professionals?.profiles?.full_name || 'Profissional';
-
-              return (
-                <div key={b.id} className="p-4 sm:flex items-center justify-between gap-4 text-xs">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-bold text-slate-200">{b.services?.name}</h4>
-                      <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded border ${status.color}`}>
-                        {status.label}
-                      </span>
+                        {b.services?.name}
+                      </h4>
+                      <span className={`badge badge-${cfg.badge}`} style={{ fontSize: '0.6875rem' }}>{cfg.label}</span>
                     </div>
-                    <p className="text-slate-400">
-                      Profissional: {profName} | {formatDateTime(b.scheduled_at)}
+                    <p style={{ fontSize: '0.8125rem', color: 'var(--color-muted)', margin: 0 }}>
+                      {profName} · {formatDateTime(b.scheduled_at)}
                     </p>
                   </div>
-                  <div className="flex items-center gap-4 mt-2 sm:mt-0">
-                    <span className="font-bold text-slate-300">
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
+                    <span style={{ fontSize: '0.9375rem', fontWeight: 700, color: 'var(--color-ink)' }}>
                       R$ {b.price.toFixed(2)}
                     </span>
                     {b.status === 'completed' && (
-                      <div className="flex items-center">
-                        {(() => {
-                          const review = Array.isArray(b.reviews) ? b.reviews[0] : b.reviews;
-                          if (review) {
-                            return (
-                              <span className="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-[10px] text-yellow-400 font-bold flex items-center gap-1">
-                                ★ {review.rating}/5
-                              </span>
-                            );
-                          }
-                          return (
-                            <Link
-                              href={`/dashboard/avaliar/${b.id}`}
-                              className="px-2.5 py-1 rounded bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/20 text-[10px] text-yellow-400 font-bold transition"
-                            >
-                              Avaliar
-                            </Link>
-                          );
-                        })()}
-                      </div>
+                      review ? (
+                        <span className="badge badge-warning" style={{ gap: '0.25rem' }}>
+                          <Icons.Star style={{ width: 10, height: 10, fill: 'currentColor' }} aria-hidden="true" />
+                          {review.rating}/5
+                        </span>
+                      ) : (
+                        <Link
+                          href={`/dashboard/avaliar/${b.id}`}
+                          id={`review-${b.id}`}
+                          className="btn btn-secondary btn-sm"
+                          style={{ fontSize: '0.75rem', padding: '0.375rem 0.75rem' }}
+                        >
+                          Avaliar
+                        </Link>
+                      )
                     )}
                   </div>
                 </div>
               );
             })}
           </div>
-        )}
-      </section>
+        </section>
+      )}
     </div>
   );
 }

@@ -1,15 +1,13 @@
 import './globals.css';
+import type { Metadata } from 'next';
 
-export const metadata = {
-  title: 'Painel Administrativo - Solução Já',
-  description: 'Administração da plataforma Solução Já.',
+export const metadata: Metadata = {
+  title: 'Painel Admin — Solução Já',
+  description: 'Painel administrativo interno da plataforma Solução Já.',
+  robots: { index: false, follow: false },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
       <body>{children}</body>

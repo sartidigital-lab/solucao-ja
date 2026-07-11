@@ -2,18 +2,23 @@ import React from 'react';
 import { createClient } from '../lib/supabase/server';
 import AdminLogin from './AdminLogin';
 import AdminDashboard from './AdminDashboard';
+import { ShieldX, LogOut } from 'lucide-react';
 
 export default async function AdminPage() {
   const supabase = await createClient();
 
-  // 1. Fetch user session
   const { data: { user }, error: userError } = await supabase.auth.getUser();
 
   if (userError || !user) {
     return <AdminLogin />;
   }
 
-  // 2. Fetch user profile role
+  async function handleLogout() {
+    'use server';
+    const supabaseClient = await createClient();
+    await supabaseClient.auth.signOut();
+  }
+
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('*')
@@ -21,25 +26,83 @@ export default async function AdminPage() {
     .single();
 
   if (profileError || !profile || (profile as any).role !== 'admin') {
-    // Access denied visual card
     return (
-      <main className="min-h-screen bg-slate-950 flex items-center justify-center p-6 text-white">
-        <div className="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl w-full max-w-sm text-center space-y-4">
-          <div className="p-3 bg-red-500/10 text-red-400 border border-red-500/20 rounded-full w-fit mx-auto">
-            <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-          </div>
-          <h2 className="text-xl font-bold">Acesso Negado</h2>
-          <p className="text-xs text-slate-400 leading-relaxed">
-            Sua conta ({user.email}) não possui privilégios de administrador da plataforma Solução Já.
+      <main
+        style={{
+          minHeight: '100vh',
+          background: 'var(--color-surface)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1.5rem',
+        }}
+      >
+        <div
+          style={{
+            width: '100%',
+            maxWidth: 380,
+            background: 'var(--color-bg)',
+            border: '1.5px solid var(--color-border)',
+            borderRadius: 'var(--radius-xl)',
+            padding: '2.5rem',
+            textAlign: 'center',
+          }}
+        >
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 48,
+              height: 48,
+              borderRadius: 'var(--radius-full)',
+              background: 'var(--color-error-light)',
+              color: 'var(--color-error)',
+              margin: '0 auto 1.25rem',
+            }}
+            aria-hidden="true"
+          >
+            <ShieldX style={{ width: 22, height: 22 }} />
+          </span>
+
+          <h1
+            style={{
+              fontSize: '1.25rem',
+              fontWeight: 800,
+              color: 'var(--color-ink)',
+              margin: '0 0 0.5rem',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Acesso negado
+          </h1>
+          <p
+            style={{
+              fontSize: '0.875rem',
+              color: 'var(--color-muted)',
+              margin: '0 auto 1.75rem',
+              maxWidth: '32ch',
+              lineHeight: 1.55,
+            }}
+          >
+            A conta <strong style={{ color: 'var(--color-ink)', fontWeight: 600 }}>{user.email}</strong> não possui
+            privilégios de administrador.
           </p>
-          <form action="/api/auth/logout" method="POST" className="pt-2">
+
+          <form action={handleLogout}>
             <button
               type="submit"
-              className="w-full py-2.5 bg-slate-800 hover:bg-slate-750 text-xs font-bold rounded-xl transition"
+              className="btn btn-secondary"
+              style={{
+                width: '100%',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+              }}
             >
-              Voltar para Login
+              <LogOut style={{ width: 15, height: 15 }} aria-hidden="true" />
+              Sair e voltar ao login
             </button>
           </form>
         </div>
@@ -47,7 +110,6 @@ export default async function AdminPage() {
     );
   }
 
-  // 3. Fetch categories and professionals lists
   const { data: categories } = await supabase
     .from('categories')
     .select('*')

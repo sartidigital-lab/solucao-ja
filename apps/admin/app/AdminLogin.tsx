@@ -2,8 +2,9 @@
 
 import React, { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import * as Icons from 'lucide-react';
+import { Mail, Lock, ShieldCheck } from 'lucide-react';
 import { createClient } from '../lib/supabase/client';
+import Logo from '../components/Logo';
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -18,13 +19,14 @@ export default function AdminLogin() {
 
     startTransition(async () => {
       const supabase = createClient();
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
 
       if (signInError) {
-        setError(signInError.message);
+        if (signInError.message === 'Invalid login credentials') {
+          setError('E-mail ou senha incorretos. Verifique e tente novamente.');
+        } else {
+          setError(signInError.message);
+        }
       } else {
         router.refresh();
       }
@@ -32,74 +34,106 @@ export default function AdminLogin() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 flex items-center justify-center p-6 text-white">
-      <div className="bg-slate-900/40 border border-slate-800 p-8 rounded-2xl w-full max-w-sm space-y-6">
-        <div className="text-center space-y-1">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-red-400 to-rose-400 bg-clip-text text-transparent">
-            Solução Já Admin
+    <main className="min-h-screen bg-[var(--color-surface)] flex items-center justify-center p-6 font-sans">
+      <div className="w-full max-w-[400px] bg-white border border-border rounded-xl shadow-sm p-8">
+        
+        {/* Cabecalho de Logo */}
+        <div className="mb-8">
+          <div className="inline-flex items-center gap-2.5 mb-5">
+            <Logo size={32} showText={false} />
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-sm text-ink leading-tight tracking-tight">
+                  Solução <span style={{ color: 'var(--color-primary)', fontWeight: 950 }}>Já</span>
+                </span>
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-wider bg-orange-50 text-[var(--color-primary)] border border-orange-200">
+                  ADMIN
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <h1 className="text-xl font-bold text-ink tracking-tight mb-1.5">
+            Acesso ao painel
           </h1>
-          <p className="text-[11px] text-slate-500">
-            Entre com suas credenciais de administrador para acessar o painel.
+          <p className="text-xs text-muted">
+            Insira suas credenciais para gerenciar a plataforma.
           </p>
         </div>
 
+        {/* Notificacao de Erro */}
         {error && (
-          <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-xs text-red-400">
+          <div className="bg-error-light border border-error/20 text-error text-xs font-semibold px-4 py-2.5 rounded-md mb-5" role="alert">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div className="space-y-1.5">
-            <label htmlFor="email" className="text-xs font-bold text-slate-400 block">
-              E-mail Administrativo
-            </label>
+        {/* Formulario */}
+        <form onSubmit={handleLogin} className="flex flex-col gap-4">
+          
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="admin-email" className="text-xs font-semibold text-muted">E-mail</label>
             <div className="relative">
-              <Icons.Mail className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-subtle pointer-events-none" aria-hidden="true" />
               <input
-                id="email"
+                id="admin-email"
                 type="email"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@solucaoja.com"
-                className="w-full rounded-xl border border-slate-800 bg-slate-950/80 py-2.5 pl-10 pr-4 text-xs text-white placeholder-slate-650 outline-none focus:border-red-500/45 focus:ring-1 focus:ring-red-500/45 transition"
+                placeholder="admin@solucaoja.com.br"
+                className="input pl-10 text-sm"
               />
             </div>
           </div>
 
-          <div className="space-y-1.5">
-            <label htmlFor="password" className="text-xs font-bold text-slate-400 block">
-              Senha de Acesso
-            </label>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="admin-password" className="text-xs font-semibold text-muted">Senha</label>
             <div className="relative">
-              <Icons.Lock className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-subtle pointer-events-none" aria-hidden="true" />
               <input
-                id="password"
+                id="admin-password"
                 type="password"
                 required
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full rounded-xl border border-slate-800 bg-slate-950/80 py-2.5 pl-10 pr-4 text-xs text-white placeholder-slate-650 outline-none focus:border-red-500/45 focus:ring-1 focus:ring-red-500/45 transition"
+                className="input pl-10 text-sm"
               />
             </div>
           </div>
 
           <button
+            id="admin-login-submit"
             type="submit"
             disabled={isPending}
-            className="w-full rounded-xl bg-gradient-to-r from-red-600 to-rose-600 py-3 text-xs font-bold text-white shadow-lg hover:from-red-550 hover:to-rose-550 transition disabled:opacity-50 flex items-center justify-center gap-1.5 cursor-pointer shadow-red-950/20"
+            className="btn btn-primary btn-lg w-full mt-3 inline-flex items-center justify-center gap-2 cursor-pointer"
           >
             {isPending ? (
               <>
-                <Icons.Loader2 className="h-4 w-4 animate-spin" /> Verificando...
+                <svg
+                  className="animate-spin w-4 h-4 text-white"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" className="opacity-25" />
+                  <path d="M21 12a9 9 0 00-9-9" />
+                </svg>
+                <span>Verificando acesso...</span>
               </>
             ) : (
-              'Entrar no Painel'
+              <span>Entrar no painel</span>
             )}
           </button>
         </form>
+
       </div>
     </main>
   );
