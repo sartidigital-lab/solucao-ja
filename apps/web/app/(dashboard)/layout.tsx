@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Home, User, LogOut } from 'lucide-react';
+import { Home, User, LogOut, MessageSquare } from 'lucide-react';
 import { logout } from '@/actions/auth';
 import Logo from '@/components/Logo';
 
@@ -50,6 +50,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             >
               <Home style={{ width: 15, height: 15 }} aria-hidden="true" />
               Início
+            </Link>
+            <Link
+              href="/dashboard/mensagens"
+              className="btn btn-ghost btn-sm"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}
+            >
+              <MessageSquare style={{ width: 15, height: 15 }} aria-hidden="true" />
+              Mensagens
             </Link>
             <Link
               href="/dashboard/perfil"

@@ -1,11 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
-import { LayoutDashboard, Briefcase, Image, User, LogOut } from 'lucide-react';
+import { LayoutDashboard, Briefcase, Image, User, LogOut, MessageSquare } from 'lucide-react';
 import { logout } from '@/actions/auth';
 import Logo from '@/components/Logo';
 
 const navItems = [
   { href: '/profissional', label: 'Painel', icon: LayoutDashboard },
+  { href: '/profissional/mensagens', label: 'Mensagens', icon: MessageSquare },
   { href: '/profissional/servicos', label: 'Serviços', icon: Briefcase },
   { href: '/profissional/portfolio', label: 'Portfólio', icon: Image },
   { href: '/profissional/perfil', label: 'Meu Perfil', icon: User },
