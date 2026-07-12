@@ -263,6 +263,7 @@ export default function ProfessionalRegisterPage() {
               >
                 {isPending ? 'Enviando Dados...' : 'Concluir Cadastro'}
               </button>
+            </div>
           </div>
         </form>
 
