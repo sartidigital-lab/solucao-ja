@@ -153,15 +153,15 @@ export default function AgendarClient({
       {/* Selection Left */}
       <form onSubmit={handleSubmit} className="lg:col-span-2 space-y-6">
         {error && (
-          <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-4 text-sm text-red-400">
+          <div className="rounded-lg bg-[var(--color-error-light)] border border-[var(--color-error)]/20 p-4 text-sm text-[var(--color-error)]">
             {error}
           </div>
         )}
 
-        <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-6">
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-2xl space-y-6">
           {/* Step 1: Select Date */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-300">1. Selecione a Data</label>
+            <label className="block text-sm font-semibold text-[var(--color-ink)]">1. Selecione a Data</label>
             <input
               type="date"
               required
@@ -169,16 +169,16 @@ export default function AgendarClient({
               max={maxDateStr}
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-4 py-2.5 text-sm text-white outline-none focus:border-blue-500 transition"
+              className="w-full rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-bg)] px-4 py-2.5 text-sm text-[var(--color-ink)] outline-none focus:border-[var(--color-primary)] transition"
             />
           </div>
 
           {/* Step 2: Available Slots */}
           {selectedDate && (
             <div className="space-y-3">
-              <label className="block text-sm font-semibold text-slate-300">2. Escolha o Horário</label>
+              <label className="block text-sm font-semibold text-[var(--color-ink)]">2. Escolha o Horário</label>
               {availableSlots.length === 0 ? (
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[var(--color-muted)]">
                   Nenhum horário disponível para este dia. Experimente selecionar outra data.
                 </p>
               ) : (
@@ -190,8 +190,8 @@ export default function AgendarClient({
                       onClick={() => setSelectedSlot(slot)}
                       className={`py-2 rounded-lg text-xs font-bold border transition cursor-pointer ${
                         selectedSlot === slot
-                          ? 'bg-blue-600 border-blue-600 text-white shadow-lg'
-                          : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-blue-500/40'
+                          ? 'bg-[var(--color-primary)] border-[var(--color-primary)] text-white shadow-sm'
+                          : 'bg-[var(--color-bg)] border-[var(--color-border-strong)] text-[var(--color-ink)] hover:border-[var(--color-primary)]/40'
                       }`}
                     >
                       {slot}
@@ -204,32 +204,32 @@ export default function AgendarClient({
 
           {/* Step 3: Details */}
           {selectedSlot && (
-            <div className="space-y-4 pt-4 border-t border-slate-800/60">
+            <div className="space-y-4 pt-4 border-t border-[var(--color-border)]">
               {showAddressField && (
                 <div className="space-y-1">
-                  <label className="block text-xs text-slate-400">Endereço de Atendimento</label>
+                  <label className="block text-xs text-[var(--color-muted)]">Endereço de Atendimento</label>
                   <input
                     type="text"
                     required
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="Rua, número, bairro, complemento..."
-                    className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-4 py-2.5 text-sm text-white outline-none focus:border-blue-500 transition"
+                    className="w-full rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-bg)] px-4 py-2.5 text-sm text-[var(--color-ink)] outline-none focus:border-[var(--color-primary)] transition"
                   />
-                  <p className="text-[10px] text-slate-500">
+                  <p className="text-[10px] text-[var(--color-subtle)]">
                     O profissional irá até este endereço no horário agendado.
                   </p>
                 </div>
               )}
 
               <div className="space-y-1">
-                <label className="block text-xs text-slate-400">Observações adicionais (opcional)</label>
+                <label className="block text-xs text-[var(--color-muted)]">Observações adicionais (opcional)</label>
                 <textarea
                   rows={3}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Alguma instrução especial ou detalhe sobre o serviço..."
-                  className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-4 py-2 text-sm text-white outline-none focus:border-blue-500 transition resize-none"
+                  className="w-full rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-bg)] px-4 py-2 text-sm text-[var(--color-ink)] outline-none focus:border-[var(--color-primary)] transition resize-none"
                 />
               </div>
             </div>
@@ -240,7 +240,7 @@ export default function AgendarClient({
           <button
             type="submit"
             disabled={isPending}
-            className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3.5 text-sm font-bold text-white shadow-lg hover:from-blue-500 hover:to-indigo-500 transition disabled:opacity-50 flex items-center justify-center gap-1.5 cursor-pointer shadow-blue-950/20"
+            className="w-full rounded-xl bg-[var(--color-primary)] py-3.5 text-sm font-bold text-white shadow-sm hover:bg-[var(--color-primary-hover)] transition disabled:opacity-50 flex items-center justify-center gap-1.5 cursor-pointer"
           >
             {isPending ? (
               <>
@@ -257,36 +257,37 @@ export default function AgendarClient({
 
       {/* Service Info Card Right */}
       <div className="space-y-6">
-        <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-4">
-          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800 pb-2">
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-2xl space-y-4">
+          <h3 className="text-xs font-semibold text-[var(--color-muted)] uppercase tracking-wider border-b border-[var(--color-border)] pb-2">
             Resumo do Serviço
           </h3>
 
           <div className="space-y-1">
-            <h4 className="font-bold text-white leading-tight">{service.name}</h4>
-            <p className="text-xs text-slate-400">{service.description || 'Sem descrição.'}</p>
+            <h4 className="font-bold text-[var(--color-ink)] leading-tight">{service.name}</h4>
+            <p className="text-xs text-[var(--color-muted)]">{service.description || 'Sem descrição.'}</p>
           </div>
 
           <div className="space-y-2 text-sm pt-2">
             <div className="flex justify-between">
-              <span className="text-slate-400">Duração:</span>
-              <span className="font-semibold text-white">{service.duration_minutes} min</span>
+              <span className="text-[var(--color-muted)]">Duração:</span>
+              <span className="font-semibold text-[var(--color-ink)]">{service.duration_minutes} min</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-400">Preço do Serviço:</span>
-              <span className="font-bold text-blue-400">R$ {service.price.toFixed(2)}</span>
+              <span className="text-[var(--color-muted)]">Preço do Serviço:</span>
+              <span className="font-bold text-[var(--color-primary-dark)]">R$ {service.price.toFixed(2)}</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-slate-900/20 border border-blue-950/30 p-5 rounded-2xl space-y-3">
-          <div className="flex items-center gap-2 text-blue-400">
+        <div className="bg-[var(--color-primary-light)] border border-[var(--color-primary-border)] p-5 rounded-2xl space-y-3">
+          <div className="flex items-center gap-2 text-[var(--color-primary-dark)]">
             <Icons.Info className="h-4 w-4" />
             <span className="text-xs font-bold uppercase tracking-wider">Políticas de Pagamento</span>
           </div>
-          <p className="text-xs text-slate-400 leading-relaxed">{depositText}</p>
+          <p className="text-xs text-[var(--color-primary-dark)] leading-relaxed">{depositText}</p>
         </div>
       </div>
     </div>
+  );
   );
 }

@@ -27,13 +27,13 @@ export default async function ClientDashboardPage() {
   const fullName = profile ? (profile as any).full_name : 'Cliente';
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white py-12 px-6">
+    <div className="min-h-[calc(100vh-64px)] bg-[var(--color-bg)] text-[var(--color-ink)] py-10 px-4 md:px-8">
       <div className="max-w-5xl mx-auto space-y-8">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[var(--color-ink)]">
             Olá, {fullName}!
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-[var(--color-muted)] mt-1 max-w-[68ch]">
             Aqui você gerencia suas solicitações de serviços, agendamentos ativos e histórico de atendimento.
           </p>
         </div>

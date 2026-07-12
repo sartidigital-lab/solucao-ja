@@ -26,13 +26,13 @@ export default async function AgendaPage() {
     .order('scheduled_at');
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white py-10 px-6">
+    <div className="min-h-[calc(100vh-64px)] bg-[var(--color-bg)] text-[var(--color-ink)] py-10 px-4 md:px-8">
       <div className="max-w-5xl mx-auto space-y-8">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[var(--color-ink)]">
             Minha Agenda & Agendamentos
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-[var(--color-muted)] mt-1 max-w-[68ch]">
             Configure seu horário semanal de atendimento e gerencie as solicitações recebidas.
           </p>
         </div>

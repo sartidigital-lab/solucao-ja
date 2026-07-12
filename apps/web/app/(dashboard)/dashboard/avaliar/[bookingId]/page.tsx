@@ -43,13 +43,13 @@ export default async function AvaliarPage({ params }: { params: Promise<{ bookin
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white py-12 px-6">
+    <div className="min-h-[calc(100vh-64px)] bg-[var(--color-bg)] text-[var(--color-ink)] py-10 px-4 md:px-8">
       <div className="max-w-md mx-auto space-y-8">
         <div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-amber-400 bg-clip-text text-transparent">
+          <h1 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--color-ink)]">
             Avaliar Atendimento
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-sm text-[var(--color-muted)] mt-1 max-w-[68ch]">
             Compartilhe sua experiência. Sua opinião ajuda a manter a comunidade qualificada.
           </p>
         </div>

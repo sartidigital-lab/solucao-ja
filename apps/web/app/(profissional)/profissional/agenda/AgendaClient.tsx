@@ -107,38 +107,35 @@ export default function AgendaClient({ initialSchedule, pendingBookings }: Agend
       hour: '2-digit',
       minute: '2-digit',
       timeZone: 'UTC',
-    })}`;
-  };
-
-  return (
+    })  return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Configure Schedule Column */}
       <div className="lg:col-span-2 space-y-6">
-        <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-6">
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
-            <Icons.Calendar className="h-5 w-5 text-teal-400" /> Configurar Horários Semanais
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-2xl space-y-6">
+          <h2 className="text-lg font-bold text-[var(--color-ink)] flex items-center gap-2">
+            <Icons.Calendar className="h-5 w-5 text-[var(--color-primary-dark)]" /> Configurar Horários Semanais
           </h2>
 
           {error && (
-            <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-400">
+            <div className="rounded-lg bg-[var(--color-error-light)] border border-[var(--color-error)]/20 p-3 text-sm text-[var(--color-error)]">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="rounded-lg bg-green-500/10 border border-green-500/20 p-3 text-sm text-green-400">
+            <div className="rounded-lg bg-[var(--color-success-light)] border border-[var(--color-success)]/20 p-3 text-sm text-[var(--color-success)]">
               {success}
             </div>
           )}
 
           {/* Form to add a new slot */}
-          <form onSubmit={handleAddSlot} className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end bg-slate-950 p-4 rounded-xl border border-slate-900">
+          <form onSubmit={handleAddSlot} className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end bg-[var(--color-bg)] p-4 rounded-xl border border-[var(--color-border-strong)]">
             <div className="space-y-1">
-              <label className="block text-[10px] text-slate-400 uppercase tracking-wider">Dia da Semana</label>
+              <label className="block text-[10px] text-[var(--color-muted)] uppercase tracking-wider">Dia da Semana</label>
               <select
                 value={newDay}
                 onChange={(e) => setNewDay(parseInt(e.target.value))}
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white outline-none focus:border-teal-500"
+                className="w-full rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-bg)] px-3 py-2 text-xs text-[var(--color-ink)] outline-none focus:border-[var(--color-primary)]"
               >
                 {DAYS_OF_WEEK.map((day, idx) => (
                   <option key={idx} value={idx}>
@@ -149,30 +146,30 @@ export default function AgendaClient({ initialSchedule, pendingBookings }: Agend
             </div>
 
             <div className="space-y-1">
-              <label className="block text-[10px] text-slate-400 uppercase tracking-wider">Início</label>
+              <label className="block text-[10px] text-[var(--color-muted)] uppercase tracking-wider">Início</label>
               <input
                 type="time"
                 value={newStart}
                 onChange={(e) => setNewStart(e.target.value)}
                 required
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white outline-none focus:border-teal-500"
+                className="w-full rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-bg)] px-3 py-2 text-xs text-[var(--color-ink)] outline-none focus:border-[var(--color-primary)]"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="block text-[10px] text-slate-400 uppercase tracking-wider">Término</label>
+              <label className="block text-[10px] text-[var(--color-muted)] uppercase tracking-wider">Término</label>
               <input
                 type="time"
                 value={newEnd}
                 onChange={(e) => setNewEnd(e.target.value)}
                 required
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white outline-none focus:border-teal-500"
+                className="w-full rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-bg)] px-3 py-2 text-xs text-[var(--color-ink)] outline-none focus:border-[var(--color-primary)]"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full rounded-lg bg-teal-600 hover:bg-teal-500 py-2.5 text-xs font-bold text-white transition flex items-center justify-center gap-1 cursor-pointer"
+              className="w-full rounded-lg bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] py-2.5 text-xs font-bold text-white transition flex items-center justify-center gap-1 cursor-pointer"
             >
               <Icons.Plus className="h-4 w-4" /> Adicionar
             </button>
@@ -180,9 +177,9 @@ export default function AgendaClient({ initialSchedule, pendingBookings }: Agend
 
           {/* List of current slots */}
           <div className="space-y-3">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Faixas de Horários Ativas</h3>
+            <h3 className="text-xs font-bold text-[var(--color-muted)] uppercase tracking-wider">Faixas de Horários Ativas</h3>
             {schedule.length === 0 ? (
-              <p className="text-xs text-slate-500 italic">Sua agenda está vazia. Adicione horários acima.</p>
+              <p className="text-xs text-[var(--color-subtle)] italic">Sua agenda está vazia. Adicione horários acima.</p>
             ) : (
               <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
                 {schedule
@@ -190,20 +187,20 @@ export default function AgendaClient({ initialSchedule, pendingBookings }: Agend
                   .map((slot, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between bg-slate-950/60 p-3 rounded-lg border border-slate-900 text-xs"
+                      className="flex items-center justify-between bg-[var(--color-bg)] p-3 rounded-lg border border-[var(--color-border)] text-xs"
                     >
                       <div className="flex items-center gap-4">
-                        <span className="font-bold text-teal-400 w-24">
+                        <span className="font-bold text-[var(--color-primary-dark)] w-24">
                           {DAYS_OF_WEEK[slot.day_of_week]}
                         </span>
-                        <span className="text-slate-300">
+                        <span className="text-[var(--color-ink)] font-medium">
                           {slot.start_time.substring(0, 5)} - {slot.end_time.substring(0, 5)}
                         </span>
                       </div>
                       <button
                         type="button"
                         onClick={() => handleRemoveSlot(idx)}
-                        className="text-slate-500 hover:text-red-400 transition cursor-pointer"
+                        className="text-[var(--color-subtle)] hover:text-[var(--color-error)] transition cursor-pointer"
                       >
                         <Icons.Trash2 className="h-4 w-4" />
                       </button>
@@ -217,7 +214,7 @@ export default function AgendaClient({ initialSchedule, pendingBookings }: Agend
             type="button"
             onClick={handleSaveSchedule}
             disabled={isPending}
-            className="w-full rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 py-3 text-xs font-bold text-white shadow-lg hover:from-teal-500 hover:to-emerald-500 transition disabled:opacity-50 flex items-center justify-center gap-1 cursor-pointer shadow-teal-950/10"
+            className="w-full rounded-xl bg-[var(--color-primary)] py-3 text-xs font-bold text-white shadow-sm hover:bg-[var(--color-primary-hover)] transition disabled:opacity-50 flex items-center justify-center gap-1 cursor-pointer"
           >
             {isPending ? 'Salvando...' : 'Salvar Configurações da Agenda'}
           </button>
@@ -226,32 +223,32 @@ export default function AgendaClient({ initialSchedule, pendingBookings }: Agend
 
       {/* Pending Reservations Column */}
       <div className="space-y-6">
-        <div className="bg-slate-900/40 border border-slate-800 p-6 rounded-2xl space-y-4">
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
-            <Icons.Inbox className="h-5 w-5 text-teal-400" /> Solicitações Recebidas
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] p-6 rounded-2xl space-y-4">
+          <h2 className="text-lg font-bold text-[var(--color-ink)] flex items-center gap-2">
+            <Icons.Inbox className="h-5 w-5 text-[var(--color-primary-dark)]" /> Solicitações Recebidas
           </h2>
 
           {pendingBookings.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-slate-800 p-8 text-center text-slate-500 text-xs">
+            <div className="rounded-xl border border-dashed border-[var(--color-border-strong)] p-8 text-center text-[var(--color-muted)] text-xs">
               Nenhuma solicitação pendente de resposta.
             </div>
           ) : (
             <div className="space-y-4">
               {pendingBookings.map((b) => (
-                <div key={b.id} className="bg-slate-950 p-4 rounded-xl border border-slate-900 space-y-3 text-xs">
+                <div key={b.id} className="bg-[var(--color-bg)] p-4 rounded-xl border border-[var(--color-border)] space-y-3 text-xs">
                   <div>
-                    <h4 className="font-bold text-white">{b.profiles?.full_name}</h4>
-                    <p className="text-[10px] text-slate-500">{b.services?.name}</p>
+                    <h4 className="font-bold text-[var(--color-ink)]">{b.profiles?.full_name}</h4>
+                    <p className="text-[10px] text-[var(--color-muted)]">{b.services?.name}</p>
                   </div>
 
-                  <div className="space-y-1 text-slate-400">
+                  <div className="space-y-1 text-[var(--color-muted)]">
                     <div className="flex items-center gap-1.5">
-                      <Icons.Clock className="h-3.5 w-3.5 text-slate-500" />
+                      <Icons.Clock className="h-3.5 w-3.5 text-[var(--color-subtle)]" />
                       <span>{formatDateTime(b.scheduled_at)}</span>
                     </div>
                     {b.address && (
                       <div className="flex items-center gap-1.5">
-                        <Icons.MapPin className="h-3.5 w-3.5 text-slate-500" />
+                        <Icons.MapPin className="h-3.5 w-3.5 text-[var(--color-subtle)]" />
                         <span className="line-clamp-1" title={b.address}>
                           {b.address}
                         </span>
@@ -260,7 +257,7 @@ export default function AgendaClient({ initialSchedule, pendingBookings }: Agend
                   </div>
 
                   {b.notes && (
-                    <p className="bg-slate-900 p-2 rounded text-[10px] text-slate-400 border border-slate-800">
+                    <p className="bg-[var(--color-surface)] p-2 rounded text-[10px] text-[var(--color-muted)] border border-[var(--color-border)]">
                       <strong>Obs:</strong> {b.notes}
                     </p>
                   )}
@@ -270,14 +267,14 @@ export default function AgendaClient({ initialSchedule, pendingBookings }: Agend
                     <button
                       type="button"
                       onClick={() => handleUpdateStatus(b.id, 'confirmed')}
-                      className="py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+                      className="py-2 bg-[var(--color-success)] hover:bg-emerald-600 rounded-lg text-white font-bold transition flex items-center justify-center gap-1 cursor-pointer"
                     >
                       <Icons.Check className="h-3.5 w-3.5" /> Aceitar
                     </button>
                     <button
                       type="button"
                       onClick={() => handleUpdateStatus(b.id, 'cancelled')}
-                      className="py-2 bg-red-950/40 hover:bg-red-900/40 rounded-lg text-red-400 font-bold border border-red-900/30 transition flex items-center justify-center gap-1 cursor-pointer"
+                      className="py-2 bg-[var(--color-error-light)] hover:bg-[var(--color-error)]/10 rounded-lg text-[var(--color-error)] font-bold border border-[var(--color-error)]/30 transition flex items-center justify-center gap-1 cursor-pointer"
                     >
                       <Icons.X className="h-3.5 w-3.5" /> Recusar
                     </button>
@@ -291,9 +288,9 @@ export default function AgendaClient({ initialSchedule, pendingBookings }: Agend
                     )}%20para%20${encodeURIComponent(formatDateTime(b.scheduled_at))}.`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-2 bg-slate-900 hover:bg-slate-850 rounded-lg text-slate-300 font-semibold border border-slate-850 hover:text-white transition flex items-center justify-center gap-1.5 cursor-pointer mt-1"
+                    className="w-full py-2 bg-[var(--color-surface)] hover:bg-[var(--color-surface-2)] rounded-lg text-[var(--color-ink)] font-semibold border border-[var(--color-border-strong)] transition flex items-center justify-center gap-1.5 cursor-pointer mt-1"
                   >
-                    <Icons.PhoneCall className="h-3.5 w-3.5 text-emerald-500" /> Falar com Cliente
+                    <Icons.PhoneCall className="h-3.5 w-3.5 text-[var(--color-success)]" /> Falar com Cliente
                   </a>
                 </div>
               ))}
