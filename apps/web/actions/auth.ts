@@ -42,11 +42,12 @@ export async function signUpClient(formData: unknown) {
   const { email, password, fullName, phone, city, bairro } = result.data;
   const supabase = await createClient();
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
+      emailRedirectTo: `${siteUrl}/auth/callback`,
       data: {
         role: 'client',
         full_name: fullName,
@@ -73,11 +74,12 @@ export async function signUpProfessional(formData: unknown) {
   const { email, password, fullName, phone, city, bairro, bio, cpfCnpj, category } = result.data;
   const supabase = await createClient();
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
+      emailRedirectTo: `${siteUrl}/auth/callback`,
       data: {
         role: 'professional',
         full_name: fullName,
@@ -106,10 +108,11 @@ export async function logout() {
 
 export async function loginWithGoogle() {
   const supabase = await createClient();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
+      redirectTo: `${siteUrl}/auth/callback`,
     }
   });
 
