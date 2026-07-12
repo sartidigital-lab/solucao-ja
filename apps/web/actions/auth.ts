@@ -36,7 +36,8 @@ export async function loginWithPassword(formData: unknown) {
 export async function signUpClient(formData: unknown) {
   const result = clientRegisterSchema.safeParse(formData);
   if (!result.success) {
-    return { error: 'Dados inválidos' };
+    const errorMsg = result.error.errors.map((e) => e.message).join(', ');
+    return { error: errorMsg || 'Dados inválidos' };
   }
 
   const { email, password, fullName, phone, city, bairro } = result.data;
@@ -68,7 +69,8 @@ export async function signUpClient(formData: unknown) {
 export async function signUpProfessional(formData: unknown) {
   const result = professionalRegisterSchema.safeParse(formData);
   if (!result.success) {
-    return { error: 'Dados inválidos' };
+    const errorMsg = result.error.errors.map((e) => e.message).join(', ');
+    return { error: errorMsg || 'Dados inválidos' };
   }
 
   const { email, password, fullName, phone, city, bairro, bio, cpfCnpj, category } = result.data;
