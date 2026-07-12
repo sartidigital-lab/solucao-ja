@@ -289,5 +289,4 @@ export default function AgendarClient({
       </div>
     </div>
   );
-  );
 }
