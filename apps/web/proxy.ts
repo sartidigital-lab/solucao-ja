@@ -1,14 +1,14 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { updateSession } from './lib/supabase/middleware';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { user, response } = await updateSession(request);
 
   const url = request.nextUrl.clone();
   const path = url.pathname;
 
-  // Fetch user role from metadata
-  const role = user?.app_metadata?.role || user?.user_metadata?.role;
+  // app_metadata is written only by trusted server-side administration.
+  const role = user?.app_metadata?.role;
 
   const isAuthPage = path.startsWith('/login') || path.startsWith('/cadastro');
 

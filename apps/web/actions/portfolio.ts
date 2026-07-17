@@ -17,28 +17,15 @@ export async function addPortfolioImage(url: string, title?: string | null) {
     .select('*', { count: 'exact', head: true })
     .eq('professional_id', user.id);
 
-  // Fetch professional plan
-  const { data: professional } = await supabase
-    .from('professionals')
-    .select('subscription_plan')
-    .eq('id', user.id)
-    .single();
-
-  const plan = professional ? (professional as any).subscription_plan : 'gratuito';
-
-  let maxPhotos = 3;
-  if (plan === 'profissional') maxPhotos = 10;
-  if (plan === 'destaque') maxPhotos = 30;
+  const maxPhotos = 20;
 
   if (count && count >= maxPhotos) {
     return {
-      error: `O seu plano (${
-        plan === 'gratuito' ? 'Gratuito' : plan === 'profissional' ? 'Profissional' : 'Destaque'
-      }) limita o portfólio a no máximo ${maxPhotos} fotos.`
+      error: `Limite de fotos atingido. Você pode cadastrar no máximo ${maxPhotos} fotos no seu portfólio.`
     };
   }
 
-  const { error } = await (supabase.from('portfolio_images') as any).insert({
+  const { error } = await supabase.from('portfolio_images').insert({
     professional_id: user.id,
     image_url: url,
     title: title || null,

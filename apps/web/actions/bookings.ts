@@ -20,7 +20,7 @@ export async function createBookingAction(formData: unknown) {
   }
 
   // 1. Fetch service details
-  const { data: service, error: serviceError } = await (supabase.from('services') as any)
+  const { data: service, error: serviceError } = await supabase.from('services')
     .select('*, professionals(*)')
     .eq('id', serviceId)
     .single();
@@ -47,7 +47,7 @@ export async function createBookingAction(formData: unknown) {
   const status = depositAmount > 0 ? 'awaiting_deposit' : 'pending_confirmation';
 
   // 3. Create the booking entry
-  const { data: booking, error: insertError } = await (supabase.from('bookings') as any)
+  const { data: booking, error: insertError } = await supabase.from('bookings')
     .insert({
       client_id: user.id,
       professional_id: professional.id,
@@ -86,7 +86,7 @@ export async function updateBookingStatusAction(bookingId: string, newStatus: st
   }
 
   // Fetch the current booking details
-  const { data: booking, error: fetchError } = await (supabase.from('bookings') as any)
+  const { data: booking, error: fetchError } = await supabase.from('bookings')
     .select('*')
     .eq('id', bookingId)
     .single();
@@ -108,7 +108,7 @@ export async function updateBookingStatusAction(bookingId: string, newStatus: st
     return { error: 'O cliente só pode solicitar o cancelamento do serviço' };
   }
 
-  const { error: updateError } = await (supabase.from('bookings') as any)
+  const { error: updateError } = await supabase.from('bookings')
     .update({
       status: newStatus,
       updated_at: new Date().toISOString(),
@@ -133,7 +133,7 @@ export async function updateBookingStatusAction(bookingId: string, newStatus: st
   return { success: true };
 }
 
-export async function updateProfessionalScheduleAction(slots: any[]) {
+export async function updateProfessionalScheduleAction(slots: unknown) {
   const parsed = professionalScheduleSchema.safeParse(slots);
   if (!parsed.success) {
     return { error: 'Configuração da agenda inválida' };
@@ -146,7 +146,7 @@ export async function updateProfessionalScheduleAction(slots: any[]) {
   }
 
   // Delete all existing schedule entries
-  const { error: deleteError } = await (supabase.from('professional_schedules') as any)
+  const { error: deleteError } = await supabase.from('professional_schedules')
     .delete()
     .eq('professional_id', user.id);
 
@@ -170,7 +170,7 @@ export async function updateProfessionalScheduleAction(slots: any[]) {
     updated_at: new Date().toISOString(),
   }));
 
-  const { error: insertError } = await (supabase.from('professional_schedules') as any)
+  const { error: insertError } = await supabase.from('professional_schedules')
     .insert(insertData);
 
   if (insertError) {
@@ -178,5 +178,38 @@ export async function updateProfessionalScheduleAction(slots: any[]) {
   }
 
   revalidatePath('/profissional/agenda');
+  return { success: true };
+}
+
+export async function unlockBookingContactAction(bookingId: string) {
+  const supabase = await createClient();
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError || !user) return { error: 'Não autorizado' };
+
+  const { data, error } = await supabase.rpc('unlock_contact', { p_booking_id: bookingId });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  const res = data as { error?: string; success?: boolean };
+  if (res?.error) {
+    return { error: res.error };
+  }
+
+  // Obter o ID do chat room associado para revalidar mensagens
+  const { data: chatRoom } = await supabase.from('chat_rooms')
+    .select('id')
+    .eq('booking_id', bookingId)
+    .maybeSingle();
+
+  revalidatePath('/dashboard');
+  revalidatePath('/profissional');
+  revalidatePath('/profissional/agenda');
+  if (chatRoom) {
+    revalidatePath(`/profissional/mensagens/${chatRoom.id}`);
+    revalidatePath(`/dashboard/mensagens/${chatRoom.id}`);
+  }
+
   return { success: true };
 }

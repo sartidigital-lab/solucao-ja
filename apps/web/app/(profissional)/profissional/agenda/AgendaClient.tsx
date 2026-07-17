@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import * as Icons from 'lucide-react';
-import { updateBookingStatusAction, updateProfessionalScheduleAction } from '@/actions/bookings';
+import { updateBookingStatusAction, updateProfessionalScheduleAction, unlockBookingContactAction } from '@/actions/bookings';
 
 interface AgendaClientProps {
   initialSchedule: any[];
@@ -28,6 +28,21 @@ export default function AgendaClient({ initialSchedule, pendingBookings }: Agend
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  const handleUnlockContact = (bookingId: string) => {
+    if (!confirm('Deseja desbloquear o contato deste cliente por 50 moedas?')) {
+      return;
+    }
+
+    startTransition(async () => {
+      const res = await unlockBookingContactAction(bookingId);
+      if (res.error) {
+        alert(res.error);
+      } else {
+        window.location.reload();
+      }
+    });
+  };
 
   const handleAddSlot = (e: React.FormEvent) => {
     e.preventDefault();
@@ -283,18 +298,29 @@ export default function AgendaClient({ initialSchedule, pendingBookings }: Agend
                     </button>
                   </div>
 
-                  <a
-                    href={`https://wa.me/55${b.profiles?.phone?.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(
-                      b.profiles?.full_name
-                    )},%20sou%20o%20prestador%20do%20Solução%20Já.%20Recebi%20seu%20pedido%20de%20${encodeURIComponent(
-                      b.services?.name
-                    )}%20para%20${encodeURIComponent(formatDateTime(b.scheduled_at))}.`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2 bg-[var(--color-surface)] hover:bg-[var(--color-surface-2)] rounded-lg text-[var(--color-ink)] font-semibold border border-[var(--color-border-strong)] transition flex items-center justify-center gap-1.5 cursor-pointer mt-1"
-                  >
-                    <Icons.PhoneCall className="h-3.5 w-3.5 text-[var(--color-success)]" /> Falar com Cliente
-                  </a>
+                  {b.is_contact_unlocked ? (
+                    <a
+                      href={`https://wa.me/55${b.profiles?.phone?.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(
+                        b.profiles?.full_name
+                      )},%20sou%20o%20prestador%20do%20Solução%20Já.%20Recebi%20seu%20pedido%20de%20${encodeURIComponent(
+                        b.services?.name
+                      )}%20para%20${encodeURIComponent(formatDateTime(b.scheduled_at))}.`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-2 bg-[var(--color-surface)] hover:bg-[var(--color-surface-2)] rounded-lg text-[var(--color-ink)] font-semibold border border-[var(--color-border-strong)] transition flex items-center justify-center gap-1.5 cursor-pointer mt-1"
+                    >
+                      <Icons.PhoneCall className="h-3.5 w-3.5 text-[var(--color-success)]" /> Falar com Cliente
+                    </a>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => handleUnlockContact(b.id)}
+                      disabled={isPending}
+                      className="w-full py-2 bg-amber-500 hover:bg-amber-600 rounded-lg text-slate-950 font-bold transition flex items-center justify-center gap-1.5 cursor-pointer mt-1"
+                    >
+                      <Icons.Unlock className="h-3.5 w-3.5" /> Desbloquear Contato (50 moedas)
+                    </button>
+                  )}
                 </div>
               ))}
             </div>

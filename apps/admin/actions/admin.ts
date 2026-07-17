@@ -14,14 +14,7 @@ export async function verifyProfessionalAction(
     return { error: 'Não autorizado' };
   }
 
-  // 1. Verify user is admin
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  if (!profile || (profile as any).role !== 'admin') {
+  if (user.app_metadata?.role !== 'admin') {
     return { error: 'Acesso restrito a administradores' };
   }
 
@@ -57,14 +50,7 @@ export async function createCategoryAction(
     return { error: 'Não autorizado' };
   }
 
-  // 1. Verify user is admin
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  if (!profile || (profile as any).role !== 'admin') {
+  if (user.app_metadata?.role !== 'admin') {
     return { error: 'Acesso restrito a administradores' };
   }
 
@@ -100,13 +86,7 @@ export async function updateCategoryAction(
     return { error: 'Não autorizado' };
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  if (!profile || (profile as any).role !== 'admin') {
+  if (user.app_metadata?.role !== 'admin') {
     return { error: 'Acesso restrito a administradores' };
   }
 
@@ -135,13 +115,7 @@ export async function deleteCategoryAction(id: string) {
     return { error: 'Não autorizado' };
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  if (!profile || (profile as any).role !== 'admin') {
+  if (user.app_metadata?.role !== 'admin') {
     return { error: 'Acesso restrito a administradores' };
   }
 
@@ -168,13 +142,7 @@ export async function deleteProfessionalAction(id: string) {
     return { error: 'Não autorizado' };
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  if (!profile || (profile as any).role !== 'admin') {
+  if (user.app_metadata?.role !== 'admin') {
     return { error: 'Acesso restrito a administradores' };
   }
 
@@ -190,4 +158,3 @@ export async function deleteProfessionalAction(id: string) {
   revalidatePath('/');
   return { success: true };
 }
-

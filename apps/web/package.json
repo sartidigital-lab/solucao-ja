@@ -6,7 +6,8 @@
     "dev": "next dev --port 3000 --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit --incremental false"
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.6",

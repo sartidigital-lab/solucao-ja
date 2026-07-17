@@ -1,9 +1,7 @@
 'use client';
 
-import React, { useState, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 import * as Icons from 'lucide-react';
-import { simulateMercadoPagoWebhookAction } from '@/actions/payments';
 
 interface PagamentoClientProps {
   booking: any;
@@ -11,26 +9,12 @@ interface PagamentoClientProps {
 }
 
 export default function PagamentoClient({ booking, paymentInfo }: PagamentoClientProps) {
-  const router = useRouter();
   const [copied, setCopied] = useState(false);
-  const [isPending, startTransition] = useTransition();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(paymentInfo.qrCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleSimulatePayment = () => {
-    startTransition(async () => {
-      const res = await simulateMercadoPagoWebhookAction(booking.id);
-      if (res.error) {
-        alert(res.error);
-      } else {
-        router.push('/dashboard');
-        router.refresh();
-      }
-    });
   };
 
   return (
@@ -97,33 +81,16 @@ export default function PagamentoClient({ booking, paymentInfo }: PagamentoClien
         </div>
       </div>
 
-      {/* Local Simulation Assist */}
+      {/* Payment confirmation is performed only by the signed provider webhook. */}
       <div className="border-t border-[var(--color-border)] pt-6 space-y-3">
         <div className="rounded-lg bg-[var(--color-info-light)] border border-[var(--color-info-light)] p-4 space-y-2">
           <span className="text-[10px] font-bold text-[var(--color-info)] uppercase tracking-wider block flex items-center gap-1">
-            <Icons.Settings className="h-3 w-3 animate-spin" /> Modo de Testes Locais
+            <Icons.Clock3 className="h-3 w-3" /> Aguardando confirmação
           </span>
           <p className="text-[10px] text-[var(--color-info)] leading-relaxed">
-            Como webhooks reais precisam de URLs públicas para funcionar, use o botão abaixo para simular a resposta de pagamento aprovado do Mercado Pago.
+            Assim que o Mercado Pago confirmar o pagamento, seu agendamento será atualizado automaticamente.
           </p>
         </div>
-
-        <button
-          type="button"
-          onClick={handleSimulatePayment}
-          disabled={isPending}
-          className="w-full rounded-xl bg-[var(--color-primary)] py-3 text-xs font-bold text-white shadow-sm hover:bg-[var(--color-primary-hover)] transition disabled:opacity-50 flex items-center justify-center gap-1.5 cursor-pointer"
-        >
-          {isPending ? (
-            <>
-              <Icons.Loader2 className="h-4 w-4 animate-spin" /> Confirmando...
-            </>
-          ) : (
-            <>
-              <Icons.ShieldCheck className="h-4 w-4" /> Simular Pagamento Aprovado
-            </>
-          )}
-        </button>
 
         <a
           href="/dashboard"

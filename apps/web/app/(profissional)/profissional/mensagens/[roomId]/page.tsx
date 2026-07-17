@@ -45,6 +45,8 @@ export default async function ProfessionalChatRoomPage({ params }: PageProps) {
         otherPartyAvatar={activeRoom.other_party_avatar}
         initialMessages={initialMessages}
         role="professional"
+        isContactUnlocked={activeRoom.is_contact_unlocked}
+        bookingId={activeRoom.booking_id}
       />
     </div>
   );

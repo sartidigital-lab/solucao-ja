@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 export interface SearchParams {
   lat: number;
@@ -12,11 +12,11 @@ export interface SearchParams {
 }
 
 export async function searchProfessionalsAction(params: SearchParams) {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   
   const maxRadiusMeters = params.radiusKm * 1000;
 
-  const { data, error } = await (supabase as any).rpc('search_professionals', {
+  const { data, error } = await supabase.rpc('search_professionals', {
     client_lat: params.lat,
     client_lng: params.lng,
     max_radius_meters: maxRadiusMeters,

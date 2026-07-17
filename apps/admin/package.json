@@ -6,7 +6,8 @@
     "dev": "next dev --port 3001 --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit --incremental false"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",

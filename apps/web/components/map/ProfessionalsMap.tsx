@@ -152,10 +152,6 @@ export default function ProfessionalsMap({
           ? `<span class="bg-amber-500 text-white text-xs font-black px-1.5 py-0.5 rounded-sm uppercase tracking-wider">★ Destaque</span>`
           : ``;
 
-        const whatsappHref = p.phone
-          ? `https://wa.me/55${p.phone.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(p.full_name)}%2C%20vi%20seu%20perfil%20no%20mapa%20do%20Solução%20Já.`
-          : '';
-
         const verifyBadgeHtml = p.is_verified
           ? `<span class="bg-info text-white w-3.5 h-3.5 rounded-full inline-flex items-center justify-center text-xs font-bold">✓</span>`
           : '';
@@ -192,16 +188,6 @@ export default function ProfessionalsMap({
               >
                 Ver Serviços
               </button>
-              ${whatsappHref ? `
-                <a 
-                  href="${whatsappHref}" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  class="bg-[#25D366] hover:bg-[#20ba59] text-white py-1 px-2.5 text-xs font-bold rounded-lg cursor-pointer no-underline inline-flex items-center justify-center transition-colors"
-                >
-                  WhatsApp
-                </a>
-              ` : ''}
             </div>
             <div class="mt-1.5 text-center">
               ${badgeHtml}
@@ -240,7 +226,7 @@ export default function ProfessionalsMap({
           <Users className="w-4 h-4 text-primary" />
           Pins vermelhos: profissionais normais · Pins corais: destaques
         </span>
-        <span>Pins azuis: você</span>
+        <span>Áreas aproximadas · pin azul: você</span>
       </div>
       <div
         ref={mapRef}

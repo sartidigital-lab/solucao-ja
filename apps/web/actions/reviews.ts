@@ -21,7 +21,7 @@ export async function createReviewAction(
   }
 
   // 2. Fetch booking details to verify client and status
-  const { data: booking, error: bookingError } = await (supabase.from('bookings') as any)
+  const { data: booking, error: bookingError } = await supabase.from('bookings')
     .select('*')
     .eq('id', bookingId)
     .single();
@@ -39,7 +39,7 @@ export async function createReviewAction(
   }
 
   // 3. Check if review already exists
-  const { data: existingReview } = await (supabase.from('reviews') as any)
+  const { data: existingReview } = await supabase.from('reviews')
     .select('*')
     .eq('booking_id', bookingId)
     .single();
@@ -49,7 +49,7 @@ export async function createReviewAction(
   }
 
   // 4. Insert new review
-  const { error: insertError } = await (supabase.from('reviews') as any)
+  const { error: insertError } = await supabase.from('reviews')
     .insert({
       booking_id: bookingId,
       client_id: user.id,

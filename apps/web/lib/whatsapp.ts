@@ -1,8 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize a standard supabase client inside whatsapp helper if needed to fetch phone numbers
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 export async function sendWhatsAppAlert(phone: string, message: string) {
   const formattedPhone = phone.replace(/\D/g, '');
@@ -57,7 +53,15 @@ export async function sendWhatsAppAlert(phone: string, message: string) {
 }
 
 export async function notifyStatusChange(bookingId: string, event: 'created' | 'confirmed' | 'cancelled' | 'completed') {
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  let supabase;
+  try {
+    supabase = createAdminClient();
+  } catch (error) {
+    // Notifications are supplementary: a missing integration must not block a
+    // booking or payment state transition.
+    console.error('Integração de notificações indisponível:', error);
+    return;
+  }
 
   const { data: booking } = await (supabase.from('bookings') as any)
     .select('*, services(*), client:client_id(full_name, phone), professional:professional_id(profiles(full_name, phone))')

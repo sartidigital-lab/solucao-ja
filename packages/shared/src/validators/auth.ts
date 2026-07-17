@@ -38,8 +38,7 @@ export const professionalProfileSchema = clientProfileSchema.extend({
   serviceAreaRadiusKm: z.number().min(1, 'O raio mínimo é de 1 km').max(100, 'O raio máximo é de 100 km'),
   isAvailableNow: z.boolean(),
   depositPolicy: z.enum(['no_deposit', 'fixed_amount', 'percentage']).default('no_deposit'),
-  depositFixedAmount: z.number().min(0, 'O valor não pode ser negativo').default(0),
-  subscriptionPlan: z.enum(['gratuito', 'profissional', 'destaque']).optional().default('gratuito')
+  depositFixedAmount: z.number().min(0, 'O valor não pode ser negativo').default(0)
 });
 
 export const serviceSchema = z.object({
@@ -53,4 +52,3 @@ export const serviceSchema = z.object({
 export type ClientProfileInput = z.infer<typeof clientProfileSchema>;
 export type ProfessionalProfileInput = z.infer<typeof professionalProfileSchema>;
 export type ServiceInput = z.infer<typeof serviceSchema>;
-

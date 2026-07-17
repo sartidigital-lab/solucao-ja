@@ -1,106 +1,128 @@
+import { createHmac, timingSafeEqual } from 'crypto';
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { notifyStatusChange } from '@/lib/whatsapp';
 
-// Initialize Supabase admin/service role client since webhooks operate outside authenticated browser sessions
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+function isValidSignature(request: Request, dataId: string) {
+  const secret = process.env.MERCADO_PAGO_WEBHOOK_SECRET;
+  const signature = request.headers.get('x-signature');
+  const requestId = request.headers.get('x-request-id');
 
-const isMockMode = () => {
-  const token = process.env.MERCADO_PAGO_ACCESS_TOKEN;
-  return !token || token.includes('dummy') || token.includes('TEST-XXXXXX');
-};
+  if (!secret || !signature || !requestId) return false;
 
-export async function POST(req: Request) {
+  const entries = Object.fromEntries(
+    signature.split(',').map((part) => {
+      const [key, value] = part.trim().split('=', 2);
+      return [key, value];
+    }),
+  );
+  const timestamp = entries.ts;
+  const receivedHash = entries.v1;
+  if (!timestamp || !receivedHash) return false;
+
+  const manifest = `id:${dataId.toLowerCase()};request-id:${requestId};ts:${timestamp};`;
+  const expectedHash = createHmac('sha256', secret).update(manifest).digest('hex');
+  const expected = Buffer.from(expectedHash, 'hex');
+  const received = Buffer.from(receivedHash, 'hex');
+
+  return expected.length === received.length && timingSafeEqual(expected, received);
+}
+
+export async function POST(request: Request) {
+  const accessToken = process.env.MERCADO_PAGO_ACCESS_TOKEN;
+  const dataId = new URL(request.url).searchParams.get('data.id');
+
+  if (!accessToken || !process.env.MERCADO_PAGO_WEBHOOK_SECRET) {
+    console.error('Webhook Mercado Pago não configurado.');
+    return NextResponse.json({ error: 'Integração indisponível' }, { status: 503 });
+  }
+  if (!dataId || !isValidSignature(request, dataId)) {
+    return NextResponse.json({ error: 'Assinatura inválida' }, { status: 401 });
+  }
+
   try {
-    const url = new URL(req.url);
-    // Mercado Pago sends ID either in query parameters (?data.id=X or ?id=X) or in body
-    let paymentId = url.searchParams.get('data.id') || url.searchParams.get('id');
+    const mpPayment = await new Payment(new MercadoPagoConfig({ accessToken })).get({ id: dataId });
+    const supabase = createAdminClient();
+    const payments = supabase.from('payments') as any;
+    const bookings = supabase.from('bookings') as any;
+    const { data: paymentRow, error: paymentError } = await payments
+      .select('*')
+      .eq('mercado_pago_payment_id', dataId)
+      .maybeSingle();
 
-    if (!paymentId) {
-      const body = await req.json().catch(() => ({}));
-      paymentId = body.data?.id || body.id;
-    }
+    if (paymentError) throw paymentError;
+    if (!paymentRow) return NextResponse.json({ received: true });
 
-    if (!paymentId) {
-      return NextResponse.json({ error: 'ID de pagamento não informado' }, { status: 400 });
-    }
-
-    // Skip verification if payment is mock
-    if (paymentId.startsWith('mock_payment_') || isMockMode()) {
-      // Find payment by ID in DB
-      const { data: payment } = await supabase
-        .from('payments')
-        .select('*')
-        .eq('mercado_pago_payment_id', paymentId)
-        .single();
-
-      if (payment) {
-        // Approve payment
-        await supabase
-          .from('payments')
-          .update({ status: 'approved', updated_at: new Date().toISOString() })
-          .eq('id', payment.id);
-
-        // Approve booking
-        await supabase
-          .from('bookings')
-          .update({ status: 'confirmed', deposit_status: 'paid', updated_at: new Date().toISOString() })
-          .eq('id', payment.booking_id);
-
-        // Notify WhatsApp
-        try {
-          const { notifyStatusChange } = await import('@/lib/whatsapp');
-          await notifyStatusChange(payment.booking_id, 'confirmed');
-        } catch (e) {
-          console.error('Error triggering WhatsApp notification in mock webhook:', e);
-        }
+    if (paymentRow.booking_id) {
+      const externalReference = (mpPayment as { external_reference?: string | null }).external_reference;
+      if (externalReference !== paymentRow.booking_id) {
+        console.error('Pagamento Mercado Pago não corresponde ao agendamento.', { dataId });
+        return NextResponse.json({ error: 'Referência de pagamento inválida' }, { status: 400 });
       }
-
-      return NextResponse.json({ success: true, message: 'Mock payment approved' });
-    }
-
-    // Live Mode verification with Mercado Pago SDK
-    const client = new MercadoPagoConfig({
-      accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN || '',
-    });
-    const payment = new Payment(client);
-    const mpPayment = await payment.get({ id: paymentId });
-
-    if (mpPayment.status === 'approved') {
-      const { data: paymentRow } = await supabase
-        .from('payments')
-        .select('*')
-        .eq('mercado_pago_payment_id', paymentId)
-        .single();
-
-      if (paymentRow) {
-        // Approve payment
-        await supabase
-          .from('payments')
-          .update({ status: 'approved', updated_at: new Date().toISOString() })
-          .eq('id', paymentRow.id);
-
-        // Approve booking
-        await supabase
-          .from('bookings')
-          .update({ status: 'confirmed', deposit_status: 'paid', updated_at: new Date().toISOString() })
-          .eq('id', paymentRow.booking_id);
-
-        // Notify WhatsApp
-        try {
-          const { notifyStatusChange } = await import('@/lib/whatsapp');
-          await notifyStatusChange(paymentRow.booking_id, 'confirmed');
-        } catch (e) {
-          console.error('Error triggering WhatsApp notification in live webhook:', e);
-        }
+    } else {
+      const externalReference = (mpPayment as { external_reference?: string | null }).external_reference;
+      if (!externalReference || !externalReference.startsWith('coins_')) {
+        console.error('Pagamento de moedas com referência inválida.', { dataId });
+        return NextResponse.json({ error: 'Referência de pagamento inválida' }, { status: 400 });
       }
     }
 
-    return NextResponse.json({ success: true });
-  } catch (error: any) {
-    console.error('Webhook error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if (mpPayment.status !== 'approved' || paymentRow.status === 'approved') {
+      return NextResponse.json({ received: true });
+    }
+
+    const { error: paymentUpdateError } = await payments
+      .update({ status: 'approved', updated_at: new Date().toISOString() })
+      .eq('id', paymentRow.id)
+      .eq('status', 'pending');
+    if (paymentUpdateError) throw paymentUpdateError;
+
+    if (paymentRow.booking_id) {
+      // 1. Fluxo de pagamento de sinal de agendamento (cliente)
+      const { error: bookingUpdateError } = await bookings
+        .update({ status: 'confirmed', deposit_status: 'paid', updated_at: new Date().toISOString() })
+        .eq('id', paymentRow.booking_id)
+        .eq('status', 'awaiting_deposit');
+      if (bookingUpdateError) throw bookingUpdateError;
+
+      await notifyStatusChange(paymentRow.booking_id, 'confirmed');
+    } else if (paymentRow.professional_id && paymentRow.coins_amount) {
+      // 2. Fluxo de compra de pacote de moedas (profissional)
+      const professionals = supabase.from('professionals') as any;
+      const transactions = supabase.from('coins_transactions') as any;
+
+      // Buscar o saldo de moedas atual
+      const { data: prof, error: fetchProfError } = await professionals
+        .select('coins_balance')
+        .eq('id', paymentRow.professional_id)
+        .single();
+      if (fetchProfError) throw fetchProfError;
+
+      const newBalance = (prof?.coins_balance || 0) + paymentRow.coins_amount;
+
+      // Atualizar o saldo de moedas do profissional
+      const { error: balanceUpdateError } = await professionals
+        .update({ coins_balance: newBalance, updated_at: new Date().toISOString() })
+        .eq('id', paymentRow.professional_id);
+      if (balanceUpdateError) throw balanceUpdateError;
+
+      // Inserir registro na tabela de transações de moedas
+      const packageName = paymentRow.coins_package_id === 'conexao' ? 'Conexão' : paymentRow.coins_package_id === 'avanco' ? 'Avanço' : 'Prospera';
+      const { error: txInsertError } = await transactions.insert({
+        professional_id: paymentRow.professional_id,
+        booking_id: null,
+        amount: paymentRow.coins_amount,
+        transaction_type: 'purchase',
+        description: `Compra do Pacote ${packageName} (+${paymentRow.coins_amount} moedas)`,
+        created_at: new Date().toISOString(),
+      });
+      if (txInsertError) throw txInsertError;
+    }
+
+    return NextResponse.json({ received: true });
+  } catch (error) {
+    console.error('Erro ao processar webhook do Mercado Pago:', error);
+    return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

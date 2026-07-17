@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useTransition } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Send, MessageSquare, ShieldCheck, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Send, MessageSquare, ShieldCheck, AlertCircle, Unlock } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { ChatMessage, sendMessageAction, markMessagesAsReadAction } from '@/actions/chat';
+import { unlockBookingContactAction } from '@/actions/bookings';
 
 interface ChatRoomWindowProps {
   roomId: string;
@@ -13,6 +14,8 @@ interface ChatRoomWindowProps {
   otherPartyAvatar?: string | null;
   initialMessages: ChatMessage[];
   role: 'client' | 'professional';
+  isContactUnlocked?: boolean;
+  bookingId?: string | null;
 }
 
 export default function ChatRoomWindow({
@@ -22,12 +25,34 @@ export default function ChatRoomWindow({
   otherPartyAvatar,
   initialMessages,
   role,
+  isContactUnlocked = true,
+  bookingId,
 }: ChatRoomWindowProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [inputText, setInputText] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [isUnlocking, startUnlockTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const handleUnlockContact = () => {
+    if (!bookingId) {
+      alert('Esta conversa não possui um agendamento associado.');
+      return;
+    }
+    if (!confirm('Deseja desbloquear o contato deste cliente por 50 moedas?')) {
+      return;
+    }
+    startUnlockTransition(async () => {
+      setError(null);
+      const res = await unlockBookingContactAction(bookingId);
+      if (res.error) {
+        setError(res.error);
+      } else {
+        window.location.reload();
+      }
+    });
+  };
   const supabase = createClient();
   const backPath = role === 'client' ? '/dashboard/mensagens' : '/profissional/mensagens';
 
@@ -215,33 +240,50 @@ export default function ChatRoomWindow({
 
       {/* ─── Footer / Campo de Entrada ─────────────────────────────── */}
       <footer className="p-3 bg-white border-t border-border/80 shrink-0">
-        <form onSubmit={handleSend} className="flex gap-2 items-center">
-          <input
-            id="chat-input"
-            type="text"
-            placeholder="Digite sua mensagem aqui..."
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            className="flex-1 bg-surface border border-border rounded-xl px-4 py-2.5 text-xs text-ink placeholder:text-muted focus:border-primary focus:ring-0 outline-none"
-            autoComplete="off"
-            disabled={isSending}
-            aria-label="Digitar mensagem"
-          />
-          <button
-            type="submit"
-            id="chat-send-btn"
-            disabled={!inputText.trim() || isSending}
-            className={`
-              p-2.5 rounded-xl text-white transition-all shrink-0 cursor-pointer
-              ${!inputText.trim() || isSending
-                ? 'bg-subtle/30 text-subtle cursor-not-allowed'
-                : 'bg-primary hover:bg-primary-hover shadow-2xs hover:shadow-xs'}
-            `}
-            aria-label="Enviar mensagem"
-          >
-            <Send className="w-4 h-4" />
-          </button>
-        </form>
+        {role === 'professional' && !isContactUnlocked ? (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-amber-500/5 border border-amber-500/20 rounded-xl p-4 text-xs text-amber-800">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-4 w-4 text-amber-500 shrink-0" />
+              <span>Você precisa desbloquear o contato deste cliente para responder no chat. O desbloqueio consome 50 moedas.</span>
+            </div>
+            <button
+              type="button"
+              onClick={handleUnlockContact}
+              disabled={isUnlocking}
+              className="px-4 py-2 bg-amber-500 hover:bg-amber-600 rounded-lg text-slate-950 font-bold transition flex items-center gap-1.5 cursor-pointer shrink-0 disabled:opacity-50"
+            >
+              <Unlock className="h-3.5 w-3.5 animate-pulse" /> {isUnlocking ? 'Processando...' : 'Desbloquear Contato (50 moedas)'}
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSend} className="flex gap-2 items-center">
+            <input
+              id="chat-input"
+              type="text"
+              placeholder="Digite sua mensagem aqui..."
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              className="flex-1 bg-surface border border-border rounded-xl px-4 py-2.5 text-xs text-ink placeholder:text-muted focus:border-primary focus:ring-0 outline-none"
+              autoComplete="off"
+              disabled={isSending}
+              aria-label="Digitar mensagem"
+            />
+            <button
+              type="submit"
+              id="chat-send-btn"
+              disabled={!inputText.trim() || isSending}
+              className={`
+                p-2.5 rounded-xl text-white transition-all shrink-0 cursor-pointer
+                ${!inputText.trim() || isSending
+                  ? 'bg-subtle/30 text-subtle cursor-not-allowed'
+                  : 'bg-primary hover:bg-primary-hover shadow-2xs hover:shadow-xs'}
+              `}
+              aria-label="Enviar mensagem"
+            >
+              <Send className="w-4 h-4" />
+            </button>
+          </form>
+        )}
       </footer>
 
     </div>

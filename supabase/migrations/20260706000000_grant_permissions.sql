@@ -1,19 +1,24 @@
--- Conceder privilégios de schema para as roles de API do Supabase
+-- Least-privilege API grants. Row-level security remains the authorization
+-- layer; these grants only expose the operations required by the application.
 GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
 
--- Conceder privilégios de execução em todas as funções padrão
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO anon, authenticated, service_role;
+GRANT SELECT ON TABLE public.profiles, public.professionals, public.categories,
+  public.services, public.reviews, public.portfolio_images,
+  public.professional_schedules TO anon, authenticated;
 
--- Conceder privilégios em todas as sequências (necessário para inserts com serial/identity)
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, service_role;
+GRANT UPDATE ON TABLE public.profiles, public.professionals TO authenticated;
+GRANT INSERT, UPDATE, DELETE ON TABLE public.services, public.portfolio_images,
+  public.favorites, public.professional_schedules TO authenticated;
+GRANT SELECT ON TABLE public.favorites, public.bookings, public.payments TO authenticated;
+GRANT INSERT ON TABLE public.bookings, public.reviews, public.payments TO authenticated;
+GRANT UPDATE ON TABLE public.bookings TO authenticated;
 
--- Conceder privilégios padrão de manipulação de tabelas
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO postgres, service_role;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon, authenticated;
-GRANT INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO authenticated;
+-- The service role is server-only and is used for verified integrations.
+GRANT ALL PRIVILEGES ON TABLE public.profiles, public.professionals,
+  public.categories, public.services, public.bookings, public.reviews,
+  public.portfolio_images, public.favorites, public.payments,
+  public.professional_schedules TO service_role;
 
--- Configurar privilégios padrão para novos objetos que forem criados futuramente
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO anon, authenticated;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT INSERT, UPDATE, DELETE ON TABLES TO authenticated;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO anon, authenticated;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.search_professionals(
+  double precision, double precision, double precision, uuid, text, boolean
+) TO anon, authenticated, service_role;

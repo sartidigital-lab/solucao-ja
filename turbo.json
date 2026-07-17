@@ -3,6 +3,21 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "env": [
+        "GOOGLE_MAPS_API_KEY",
+        "MERCADO_PAGO_ACCESS_TOKEN",
+        "MERCADO_PAGO_PUBLIC_KEY",
+        "MERCADO_PAGO_WEBHOOK_SECRET",
+        "NEXT_PUBLIC_ADMIN_URL",
+        "NEXT_PUBLIC_APP_URL",
+        "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY",
+        "NEXT_PUBLIC_SITE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "WHATSAPP_API_TOKEN",
+        "WHATSAPP_PHONE_NUMBER_ID"
+      ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "dev": {
@@ -11,6 +26,9 @@
     },
     "lint": {
       "dependsOn": ["^lint"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
     },
     "start": {
       "dependsOn": ["build"]

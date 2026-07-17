@@ -19,13 +19,7 @@ export default async function AdminPage() {
     await supabaseClient.auth.signOut();
   }
 
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single();
-
-  if (profileError || !profile || (profile as any).role !== 'admin') {
+  if (user.app_metadata?.role !== 'admin') {
     return (
       <main
         style={{

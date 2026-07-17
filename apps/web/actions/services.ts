@@ -18,15 +18,6 @@ export async function createService(formData: unknown) {
     return { error: 'Não autorizado' };
   }
 
-  // Fetch professional plan
-  const { data: professional } = await supabase
-    .from('professionals')
-    .select('subscription_plan')
-    .eq('id', user.id)
-    .single();
-
-  const plan = professional ? (professional as any).subscription_plan : 'gratuito';
-
   // Count existing services
   const { count } = await supabase
     .from('services')
@@ -35,11 +26,11 @@ export async function createService(formData: unknown) {
 
   const existingCount = count || 0;
 
-  if (plan === 'gratuito' && existingCount >= 3) {
-    return { error: 'O plano Gratuito limita o cadastro a no máximo 3 serviços. Faça um upgrade para cadastrar serviços ilimitados.' };
+  if (existingCount >= 20) {
+    return { error: 'Você atingiu o limite máximo de 20 serviços cadastrados.' };
   }
 
-  const { error } = await (supabase.from('services') as any).insert({
+  const { error } = await supabase.from('services').insert({
     professional_id: user.id,
     category_id: categoryId,
     name,
@@ -70,7 +61,7 @@ export async function updateService(id: string, formData: unknown) {
     return { error: 'Não autorizado' };
   }
 
-  const { error } = await (supabase.from('services') as any)
+  const { error } = await supabase.from('services')
     .update({
       category_id: categoryId,
       name,
@@ -98,7 +89,7 @@ export async function deleteService(id: string) {
     return { error: 'Não autorizado' };
   }
 
-  const { error } = await (supabase.from('services') as any)
+  const { error } = await supabase.from('services')
     .delete()
     .eq('id', id)
     .eq('professional_id', user.id);

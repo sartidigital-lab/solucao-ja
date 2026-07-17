@@ -18,7 +18,7 @@ export async function updateClientProfile(formData: unknown) {
     return { error: 'Não autorizado' };
   }
 
-  const { error } = await (supabase.from('profiles') as any)
+  const { error } = await supabase.from('profiles')
     .update({
       full_name: fullName,
       phone,
@@ -104,7 +104,7 @@ export async function updateProfessionalProfile(formData: unknown) {
     return { error: 'Dados inválidos' };
   }
 
-  const { fullName, phone, city, bairro, bio, cpfCnpj, attendanceType, serviceAreaRadiusKm, isAvailableNow, depositPolicy, depositFixedAmount, subscriptionPlan } = result.data;
+  const { fullName, phone, city, bairro, bio, cpfCnpj, attendanceType, serviceAreaRadiusKm, isAvailableNow, depositPolicy, depositFixedAmount } = result.data;
   const supabase = await createClient();
 
   const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -117,7 +117,7 @@ export async function updateProfessionalProfile(formData: unknown) {
   const locationString = `POINT(${lng} ${lat})`;
 
   // 1. Update public.profiles
-  const { error: profileError } = await (supabase.from('profiles') as any)
+  const { error: profileError } = await supabase.from('profiles')
     .update({
       full_name: fullName,
       phone,
@@ -132,7 +132,7 @@ export async function updateProfessionalProfile(formData: unknown) {
   }
 
   // 2. Update public.professionals
-  const { error: professionalError } = await (supabase.from('professionals') as any)
+  const { error: professionalError } = await supabase.from('professionals')
     .update({
       bio,
       cpf_cnpj: cpfCnpj,
@@ -142,7 +142,6 @@ export async function updateProfessionalProfile(formData: unknown) {
       is_available_now: isAvailableNow,
       deposit_policy: depositPolicy,
       deposit_fixed_amount: depositFixedAmount,
-      subscription_plan: subscriptionPlan,
       updated_at: new Date().toISOString(),
     })
     .eq('id', user.id);
@@ -154,4 +153,3 @@ export async function updateProfessionalProfile(formData: unknown) {
   revalidatePath('/perfil');
   return { success: true };
 }
-

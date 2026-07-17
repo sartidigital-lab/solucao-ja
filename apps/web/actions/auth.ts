@@ -23,7 +23,7 @@ export async function loginWithPassword(formData: unknown) {
   }
 
   // Get user role
-  const role = data.user?.app_metadata?.role || data.user?.user_metadata?.role;
+  const role = data.user?.app_metadata?.role;
   if (role === 'admin') {
     redirect('/admin');
   } else if (role === 'professional') {

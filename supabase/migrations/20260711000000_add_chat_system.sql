@@ -73,3 +73,7 @@ CREATE POLICY "Members can update messages in their room" ON public.chat_message
 -- Add chat_rooms and chat_messages to Supabase Realtime publication
 ALTER PUBLICATION supabase_realtime ADD TABLE public.chat_rooms;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.chat_messages;
+
+GRANT SELECT, INSERT ON TABLE public.chat_rooms TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON TABLE public.chat_messages TO authenticated;
+GRANT ALL PRIVILEGES ON TABLE public.chat_rooms, public.chat_messages TO service_role;

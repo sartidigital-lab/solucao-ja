@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 export interface ChatMessage {
@@ -23,6 +24,7 @@ export interface ChatRoom {
   last_message?: string | null;
   last_message_time?: string | null;
   unread_count: number;
+  is_contact_unlocked?: boolean;
 }
 
 /**
@@ -37,7 +39,7 @@ export async function createOrGetChatRoomAction(professionalId: string, bookingI
   }
 
   // Descobrir se o usuário logado é o cliente ou o profissional
-  const { data: profile } = await (supabase.from('profiles') as any)
+  const { data: profile } = await supabase.from('profiles')
     .select('role')
     .eq('id', user.id)
     .single();
@@ -49,16 +51,14 @@ export async function createOrGetChatRoomAction(professionalId: string, bookingI
   let clientId = '';
   let profId = '';
 
-  if (profile.role === 'client') {
-    clientId = user.id;
-    profId = professionalId;
-  } else {
-    clientId = professionalId; // Caso o profissional inicie o chat
-    profId = user.id;
+  if (profile.role !== 'client') {
+    return { error: 'Somente clientes podem iniciar uma conversa.' };
   }
+  clientId = user.id;
+  profId = professionalId;
 
   // 1. Tentar buscar a sala existente
-  const { data: existingRoom, error: fetchError } = await (supabase.from('chat_rooms') as any)
+  const { data: existingRoom, error: fetchError } = await supabase.from('chat_rooms')
     .select('id')
     .eq('client_id', clientId)
     .eq('professional_id', profId)
@@ -74,7 +74,7 @@ export async function createOrGetChatRoomAction(professionalId: string, bookingI
   }
 
   // 2. Criar nova sala se não existir
-  const { data: newRoom, error: insertError } = await (supabase.from('chat_rooms') as any)
+  const { data: newRoom, error: insertError } = await supabase.from('chat_rooms')
     .insert({
       client_id: clientId,
       professional_id: profId,
@@ -103,7 +103,7 @@ export async function getChatRoomsAction() {
   }
 
   // Obter o papel (role) do usuário
-  const { data: profile } = await (supabase.from('profiles') as any)
+  const { data: profile } = await supabase.from('profiles')
     .select('role')
     .eq('id', user.id)
     .single();
@@ -115,7 +115,7 @@ export async function getChatRoomsAction() {
   const isClient = profile.role === 'client';
 
   // Buscar salas onde o usuário participa
-  const query = (supabase.from('chat_rooms') as any)
+  const query = supabase.from('chat_rooms')
     .select(`
       id,
       client_id,
@@ -141,13 +141,13 @@ export async function getChatRoomsAction() {
   for (const room of rooms) {
     // Buscar info do outro participante
     const otherPartyId = isClient ? room.professional_id : room.client_id;
-    const { data: otherProfile } = await (supabase.from('profiles') as any)
+    const { data: otherProfile } = await createAdminClient().from('profiles')
       .select('full_name, avatar_url')
       .eq('id', otherPartyId)
       .single();
 
     // Buscar a última mensagem da sala
-    const { data: lastMsgs } = await (supabase.from('chat_messages') as any)
+    const { data: lastMsgs } = await supabase.from('chat_messages')
       .select('content, created_at')
       .eq('room_id', room.id)
       .order('created_at', { ascending: false })
@@ -156,11 +156,21 @@ export async function getChatRoomsAction() {
     const lastMsg = lastMsgs?.[0];
 
     // Contar mensagens não lidas
-    const { count } = await (supabase.from('chat_messages') as any)
+    const { count } = await supabase.from('chat_messages')
       .select('id', { count: 'exact', head: true })
       .eq('room_id', room.id)
       .eq('is_read', false)
       .not('sender_id', 'eq', user.id);
+
+    // Verificar se o contato está desbloqueado
+    let isContactUnlocked = true;
+    if (!isClient && room.booking_id) {
+      const { data: booking } = await supabase.from('bookings')
+        .select('is_contact_unlocked')
+        .eq('id', room.booking_id)
+        .single();
+      isContactUnlocked = booking?.is_contact_unlocked || false;
+    }
 
     roomsList.push({
       id: room.id,
@@ -173,6 +183,7 @@ export async function getChatRoomsAction() {
       last_message: lastMsg?.content || null,
       last_message_time: lastMsg?.created_at || null,
       unread_count: count || 0,
+      is_contact_unlocked: isContactUnlocked,
     });
   }
 
@@ -198,7 +209,7 @@ export async function getChatMessagesAction(roomId: string) {
   }
 
   // Validar se o usuário pertence à sala
-  const { data: room, error: roomError } = await (supabase.from('chat_rooms') as any)
+  const { data: room, error: roomError } = await supabase.from('chat_rooms')
     .select('client_id, professional_id')
     .eq('id', roomId)
     .single();
@@ -212,7 +223,7 @@ export async function getChatMessagesAction(roomId: string) {
   }
 
   // Buscar mensagens
-  const { data: messages, error } = await (supabase.from('chat_messages') as any)
+  const { data: messages, error } = await supabase.from('chat_messages')
     .select('*')
     .eq('room_id', roomId)
     .order('created_at', { ascending: true });
@@ -228,8 +239,8 @@ export async function getChatMessagesAction(roomId: string) {
  * Envia uma mensagem no chat em tempo real.
  */
 export async function sendMessageAction(roomId: string, content: string) {
-  if (!content || content.trim() === '') {
-    return { error: 'A mensagem não pode ser vazia' };
+  if (!content || content.trim() === '' || content.trim().length > 2000) {
+    return { error: 'A mensagem deve ter entre 1 e 2.000 caracteres.' };
   }
 
   const supabase = await createClient();
@@ -240,7 +251,7 @@ export async function sendMessageAction(roomId: string, content: string) {
   }
 
   // Validar se o usuário pertence à sala
-  const { data: room, error: roomError } = await (supabase.from('chat_rooms') as any)
+  const { data: room, error: roomError } = await supabase.from('chat_rooms')
     .select('client_id, professional_id')
     .eq('id', roomId)
     .single();
@@ -254,7 +265,7 @@ export async function sendMessageAction(roomId: string, content: string) {
   }
 
   // Inserir mensagem
-  const { data: message, error } = await (supabase.from('chat_messages') as any)
+  const { data: message, error } = await supabase.from('chat_messages')
     .insert({
       room_id: roomId,
       sender_id: user.id,
@@ -281,7 +292,7 @@ export async function markMessagesAsReadAction(roomId: string) {
     return { error: 'Não autorizado' };
   }
 
-  const { error } = await (supabase.from('chat_messages') as any)
+  const { error } = await supabase.from('chat_messages')
     .update({ is_read: true })
     .eq('room_id', roomId)
     .not('sender_id', 'eq', user.id)
