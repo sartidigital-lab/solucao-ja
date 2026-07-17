@@ -23,6 +23,7 @@ export type Database = {
           deposit_status: string
           duration_minutes: number
           id: string
+          is_contact_unlocked: boolean
           notes: string | null
           price: number
           professional_id: string
@@ -39,6 +40,7 @@ export type Database = {
           deposit_status?: string
           duration_minutes: number
           id?: string
+          is_contact_unlocked?: boolean
           notes?: string | null
           price: number
           professional_id: string
@@ -55,6 +57,7 @@ export type Database = {
           deposit_status?: string
           duration_minutes?: number
           id?: string
+          is_contact_unlocked?: boolean
           notes?: string | null
           price?: number
           professional_id?: string
@@ -113,6 +116,51 @@ export type Database = {
           slug?: string
         }
         Relationships: []
+      }
+      coins_transactions: {
+        Row: {
+          amount: number
+          booking_id: string | null
+          created_at: string
+          description: string
+          id: string
+          professional_id: string
+          transaction_type: string
+        }
+        Insert: {
+          amount: number
+          booking_id?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          professional_id: string
+          transaction_type: string
+        }
+        Update: {
+          amount?: number
+          booking_id?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          professional_id?: string
+          transaction_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coins_transactions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coins_transactions_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       chat_messages: {
         Row: {
@@ -238,7 +286,7 @@ export type Database = {
       payments: {
         Row: {
           amount: number
-          booking_id: string
+          booking_id: string | null
           created_at: string
           id: string
           mercado_pago_payment_id: string | null
@@ -246,10 +294,13 @@ export type Database = {
           payment_method: string
           status: string
           updated_at: string
+          professional_id: string | null
+          coins_package_id: string | null
+          coins_amount: number | null
         }
         Insert: {
           amount: number
-          booking_id: string
+          booking_id?: string | null
           created_at?: string
           id?: string
           mercado_pago_payment_id?: string | null
@@ -257,10 +308,13 @@ export type Database = {
           payment_method: string
           status: string
           updated_at?: string
+          professional_id?: string | null
+          coins_package_id?: string | null
+          coins_amount?: number | null
         }
         Update: {
           amount?: number
-          booking_id?: string
+          booking_id?: string | null
           created_at?: string
           id?: string
           mercado_pago_payment_id?: string | null
@@ -268,6 +322,9 @@ export type Database = {
           payment_method?: string
           status?: string
           updated_at?: string
+          professional_id?: string | null
+          coins_package_id?: string | null
+          coins_amount?: number | null
         }
         Relationships: [
           {
@@ -277,6 +334,13 @@ export type Database = {
             referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "payments_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
         ]
       }
       portfolio_images: {
@@ -358,6 +422,7 @@ export type Database = {
           avg_rating: number
           avg_service_time_minutes: number
           bio: string | null
+          coins_balance: number
           cpf_cnpj: string | null
           created_at: string
           deposit_fixed_amount: number
@@ -378,6 +443,7 @@ export type Database = {
           avg_rating?: number
           avg_service_time_minutes?: number
           bio?: string | null
+          coins_balance?: number
           cpf_cnpj?: string | null
           created_at?: string
           deposit_fixed_amount?: number
@@ -398,6 +464,7 @@ export type Database = {
           avg_rating?: number
           avg_service_time_minutes?: number
           bio?: string | null
+          coins_balance?: number
           cpf_cnpj?: string | null
           created_at?: string
           deposit_fixed_amount?: number
@@ -597,6 +664,12 @@ export type Database = {
           subscription_plan: string
           total_reviews: number
         }[]
+      }
+      unlock_contact: {
+        Args: {
+          p_booking_id: string
+        }
+        Returns: Json
       }
     }
     Enums: {
